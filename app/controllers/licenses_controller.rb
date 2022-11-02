@@ -1,14 +1,13 @@
 class LicensesController < ApplicationController
-  before_action :set_license, only: %i[ show edit update destroy ]
+  before_action :set_license, only: %i[show edit update destroy]
 
   # GET /licenses or /licenses.json
   def index
-    @licenses = License.all
+    @licenses = License.order(params[:sort]).page(params[:page])
   end
 
   # GET /licenses/1 or /licenses/1.json
-  def show
-  end
+  def show; end
 
   # GET /licenses/new
   def new
@@ -16,8 +15,7 @@ class LicensesController < ApplicationController
   end
 
   # GET /licenses/1/edit
-  def edit
-  end
+  def edit; end
 
   # POST /licenses or /licenses.json
   def create
@@ -58,13 +56,14 @@ class LicensesController < ApplicationController
   end
 
   private
-    # Use callbacks to share common setup or constraints between actions.
-    def set_license
-      @license = License.find(params[:id])
-    end
 
-    # Only allow a list of trusted parameters through.
-    def license_params
-      params.require(:license).permit(:key, :status)
-    end
+  # Use callbacks to share common setup or constraints between actions.
+  def set_license
+    @license = License.find(params[:id])
+  end
+
+  # Only allow a list of trusted parameters through.
+  def license_params
+    params.require(:license).permit(:key, :status)
+  end
 end
