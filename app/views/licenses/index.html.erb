@@ -1,6 +1,12 @@
 <p style="color: green"><%= notice %></p>
 
-<h1>Licenses</h1>
+<div class="flex justify-between">
+  <h1>Licenses</h1>
+  <div>
+    <span>Importar Licenças</span>
+    <button type="submit" method="POST" action="/generate_key">Generate</button>
+  </div>
+</div>
 
 <div id="licenses">
   <table class="border-collapse table-fixed w-full text-sm">

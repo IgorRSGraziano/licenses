@@ -1,5 +1,6 @@
 class LicensesController < ApplicationController
   before_action :set_license, only: %i[show edit update destroy]
+  skip_before_action :verify_authenticity_token, only: :create
 
   # GET /licenses or /licenses.json
   def index
@@ -19,11 +20,17 @@ class LicensesController < ApplicationController
 
   # POST /licenses or /licenses.json
   def create
-    @license = License.new(license_params)
+    data = request.body.read.blank? ? nil : JSON.parse(request.body.read, object_class: OpenStruct)
+
+    @license = if data&.key.nil?
+                 License.new(key: SecureRandom.uuid, status: 'Inactive')
+               else
+                 License.new(license_params)
+               end
 
     respond_to do |format|
       if @license.save
-        format.html { redirect_to license_url(@license), notice: "License was successfully created." }
+        format.html { redirect_to license_url(@license), notice: 'License was successfully created.' }
         format.json { render :show, status: :created, location: @license }
       else
         format.html { render :new, status: :unprocessable_entity }
@@ -36,7 +43,7 @@ class LicensesController < ApplicationController
   def update
     respond_to do |format|
       if @license.update(license_params)
-        format.html { redirect_to license_url(@license), notice: "License was successfully updated." }
+        format.html { redirect_to license_url(@license), notice: 'License was successfully updated.' }
         format.json { render :show, status: :ok, location: @license }
       else
         format.html { render :edit, status: :unprocessable_entity }
@@ -50,7 +57,7 @@ class LicensesController < ApplicationController
     @license.destroy
 
     respond_to do |format|
-      format.html { redirect_to licenses_url, notice: "License was successfully destroyed." }
+      format.html { redirect_to licenses_url, notice: 'License was successfully destroyed.' }
       format.json { head :no_content }
     end
   end
