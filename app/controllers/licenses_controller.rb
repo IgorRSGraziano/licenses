@@ -1,10 +1,9 @@
 class LicensesController < ApplicationController
   before_action :set_license, only: %i[show edit update destroy]
-  skip_before_action :verify_authenticity_token, only: :create
 
   # GET /licenses or /licenses.json
   def index
-    @licenses = License.order(params[:sort]).page(params[:page])
+    @licenses = License.order(params[:sort] ||= 'created_at DESC').page(params[:page])
   end
 
   # GET /licenses/1 or /licenses/1.json
@@ -30,7 +29,7 @@ class LicensesController < ApplicationController
 
     respond_to do |format|
       if @license.save
-        format.html { redirect_to license_url(@license), notice: 'License was successfully created.' }
+        format.html { redirect_to licenses_path, notice: "License #{@license.key} was successfully created." }
         format.json { render :show, status: :created, location: @license }
       else
         format.html { render :new, status: :unprocessable_entity }

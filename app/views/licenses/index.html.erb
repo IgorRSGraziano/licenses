@@ -3,8 +3,8 @@
 <div class="flex justify-between">
   <h1>Licenses</h1>
   <div>
-    <span>Importar Licenças</span>
-    <button type="submit" method="POST" action="/generate_key">Generate</button>
+<!--    <span>Importar Licenças</span>-->
+    <%= link_to "Generate", licenses_path, data: { turbo_method: "post" }, class: "text-red-800 bg-transparent border border-solid border-red-800 hover:bg-red-800 hover:text-white active:bg-red-600 font-bold uppercase text-sm px-6 py-3 rounded outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150  active show  px-3 " %>
   </div>
 </div>
 
