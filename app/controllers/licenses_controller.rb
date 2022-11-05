@@ -17,6 +17,20 @@ class LicensesController < ApplicationController
   # GET /licenses/1/edit
   def edit; end
 
+  # GET /licenses/import
+  def import; end
+
+  # POST /licenses/import
+  def import_create
+    data = params[:licenses]
+    licenses = data.split(';')
+    licenses.each do |license|
+      License.create(key: license.strip, status: 'Inactive')
+    end
+
+    redirect_to licenses_import_path, notice: 'Licenses were successfully imported.'
+  end
+
   # POST /licenses or /licenses.json
   def create
     data = request.body.read.blank? ? nil : JSON.parse(request.body.read, object_class: OpenStruct)
