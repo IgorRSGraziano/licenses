@@ -28,11 +28,9 @@ class WebhookController < ApplicationController
         return render json: { sucess: false, message: "Token já gerado na primeira parcela. Parcela: #{installment}" },
                       status: :ok
       end
-      mail = req.data.buyer.email
-      prod = Rails.env.production? ? 1 : 2
-      test = Rails.env.production? ? mail : ENV['SMTP_TEST_TO']
-      key = License.new(key: SecureRandom.uuid, status: :inactive).save
-      LicenseMailer.send_license(to: req.data.buyer.email).deliver_now
+      license = License.new(key: SecureRandom.uuid, status: :inactive)
+      license.save
+      LicenseMailer.send_license(to: req.data.buyer.email, license: license).deliver_now
     end
 
     render json: { sucess: false, message: "Evento não configurado #{event_s}" },
