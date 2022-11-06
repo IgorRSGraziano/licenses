@@ -52,10 +52,10 @@
   #TODO Remover isso e passar para o turbo
 %>
 <script>
-    function updateStatus(id) {
+    async function updateStatus(id) {
         const data = new FormData()
         data.append("id", id)
-        fetch("/licenses/change_status", {
+        await fetch("/licenses/change_status", {
             method: "PUT",
             headers: {
                 "X-CSRF-Token": document.querySelector('meta[name="csrf-token"]').content,
