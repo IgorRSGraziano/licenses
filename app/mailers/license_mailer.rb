@@ -1,5 +1,4 @@
 class LicenseMailer < ApplicationMailer
-  #TODO criar template de envio de email
   def send_license(args)
     @brand = ENV['BRAND_NAME']
     @license = args[:license]
