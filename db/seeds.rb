@@ -7,11 +7,14 @@
 #   Character.create(name: "Luke", movie: movies.first)
 require 'securerandom'
 
-status = %w[active inactive suspended]
+status = [0, 1, 2]
 
-(1..20).each { |_|
+User.create(username: 'Igor', email: 'igor@gmail.com', password: '123456')
+User.create(username: 'Hebrain', email: 'hebrain@hotmail.com', password: '123456')
+
+(1..20).each do |_|
   License.create(
     key: SecureRandom.uuid,
     status: status.sample
   )
-}
+end
