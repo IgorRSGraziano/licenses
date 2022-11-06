@@ -5,6 +5,9 @@ Rails.application.routes.draw do
   post 'licenses/import', to: 'licenses#import_create'
   resources :licenses
 
+  get 'login', to: 'sessions#new'
+  post 'login', to: 'sessions#create'
+
   # Define your application routes per the DSL in https://guides.rubyonrails.org/routing.html
 
   # Defines the root path route ("/")
