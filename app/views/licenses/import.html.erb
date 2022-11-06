@@ -5,7 +5,7 @@
   <%= form_with  action_name: licenses_import_path do |form| %>
     <%= form.label :licenses, 'Separate licenses by ";"', class: 'block' %>
     <%= form.text_area :licenses, placeholder: 'license1;license2;license3', class: 'block my-7' %>
-    <%= form.submit 'Save', class: 'text-red-800 bg-transparent border border-solid border-red-800 hover:bg-red-800 hover:text-white active:bg-red-600 font-bold uppercase text-sm px-6 py-3 rounded outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150  active show  px-3' %>
+    <%= form.submit 'Save', class: 'button' %>
   <% end %>
   <%= link_to 'Back to licenses', licenses_path %>
 </div>

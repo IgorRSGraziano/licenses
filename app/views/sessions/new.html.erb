@@ -1,9 +1,9 @@
 <p style="color: green"><%= alert %></p>
 <h1>Login</h1>
-<%= form_tag '/login', remote: true do %>
-  <%= label_tag :email%>
-  <%= text_field_tag :email %>
-  <%= label_tag :password%>
-  <%= password_field_tag :password%>
-  <%= submit_tag "Login"%>
+<%= form_with action_name: login_path do |form| %>
+  <%= form.label :email%>
+  <%= form.email_field :email, class: 'form-control block w-full px-4 py-2 text-xl font-normal text-gray-700 bg-white bg-clip-padding border border-solid border-gray-300 rounded transition ease-in-out m-0 focus:text-gray-700 focus:bg-white focus:border-red-800 focus:outline-none my-3' %>
+  <%= form.label :password%>
+  <%= form.password_field :password, class: 'form-control block w-full px-4 py-2 text-xl font-normal text-gray-700 bg-white bg-clip-padding border border-solid border-gray-300 rounded transition ease-in-out m-0 focus:text-gray-700 focus:bg-white focus:border-red-800 focus:outline-none my-3' %>
+  <%= form.submit "Login", class: 'button'%>
 <%end%>
