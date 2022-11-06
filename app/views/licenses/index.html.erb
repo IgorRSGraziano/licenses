@@ -12,7 +12,7 @@
   <table class="border-collapse table-fixed w-full text-sm">
     <thead class="bg-slate-100 shadow-md">
     <tr>
-      <% ['Key', 'Status', 'Created At', 'Updated At'].each do |text| %>
+      <% ['Key', 'Created At', 'Updated At', 'Status'].each do |text| %>
         <th class="border-b dark:border-slate-600 break-words font-medium text-center p-1 pt-6 py-3 text-slate-400 dark:text-slate-200 text-left">
           <%= text %>
         </th>
@@ -22,14 +22,46 @@
     <tbody class="bg-white dark:bg-slate-800">
     <% @licenses.each do |license| %>
       <tr>
-        <% [license.key, license.status, license.created_at, license.updated_at].each do |data| %>
+        <% [license.key, license.created_at, license.updated_at].each do |data| %>
           <td class="border-b border-slate-100 break-words dark:border-slate-700 p-4 px-1 m-auto text-center text-slate-500 dark:text-slate-400"><%= data %></td>
         <% end %>
+        <% #Show license background according to color
+           if license.status == "active"
+             bg = "bg-green-200"
+           elsif license.status == "inactive"
+             bg = "bg-red-200"
+           else
+             bg = "bg-blue-200"
+           end
+        %>
+        <td class="border-b border-slate-100 break-words dark:border-slate-700 p-4 px-1 m-auto text-center text-slate-500 dark:text-slate-400">
+          <span class="<%= bg %> block w-24 py-1 px-2 m-auto rounded hover:cursor-pointer" onclick="updateStatus(<%= license.id %>)">
+          <%= license.status %>
+          </span>
+        </td>
       </tr>
     <% end %>
-  </table>
+    </table>
 </div>
 
 <%= link_to "New license", new_license_path, class: "block text-right pt-6 mr-3 font-bold underline" %>
 
 <%= paginate @licenses %>
+
+<%=
+  #TODO Remover isso e passar para o turbo
+%>
+<script>
+    function updateStatus(id) {
+        const data = new FormData()
+        data.append("id", id)
+        fetch("/licenses/change_status", {
+            method: "PUT",
+            headers: {
+                "X-CSRF-Token": document.querySelector('meta[name="csrf-token"]').content,
+            },
+            body: data
+        })
+        window.location.reload() //FIXME
+    }
+</script>

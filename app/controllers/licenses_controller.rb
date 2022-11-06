@@ -1,5 +1,5 @@
 class LicensesController < ApplicationController
-  before_action :set_license, only: %i[show edit update destroy]
+  before_action :set_license, only: %i[show edit update destroy change_status]
 
   # GET /licenses or /licenses.json
   def index
@@ -50,6 +50,15 @@ class LicensesController < ApplicationController
         format.json { render json: @license.errors, status: :unprocessable_entity }
       end
     end
+  end
+
+  # PUT /licenses/change_status
+  def change_status
+    status = License.statuses[@license.status]
+    next_status = License.statuses.invert[status.to_i + 1 == License.statuses.size ? 0 : status.to_i + 1]
+    @license.update(status: next_status)
+
+    redirect_to licenses_path, notice: 'License status was successfully changed.'
   end
 
   # PATCH/PUT /licenses/1 or /licenses/1.json
