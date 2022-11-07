@@ -30,7 +30,10 @@ class WebhookController < ApplicationController
       end
       license = License.new(key: SecureRandom.uuid, status: :inactive)
       license.save
-      LicenseMailer.send_license(to: req.data.buyer.email, license: license).deliver_now
+      # LicenseMailer.send_license(to: req.data.buyer.email, license: license).deliver_now
+
+      return render json: { sucess: true, message: "Gerado chave #{license.key} para o cliente #{req.data.buyer.email}" },
+                    status: :ok
     end
 
     render json: { sucess: false, message: "Evento não configurado #{event_s}" },

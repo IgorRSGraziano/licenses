@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2022_11_07_000737) do
+ActiveRecord::Schema[7.0].define(version: 2022_11_07_001927) do
   create_table "customers", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.string "name"
     t.string "email"
@@ -26,6 +26,10 @@ ActiveRecord::Schema[7.0].define(version: 2022_11_07_000737) do
     t.integer "status"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.bigint "customer_id"
+    t.bigint "payment_id"
+    t.index ["customer_id"], name: "index_licenses_on_customer_id"
+    t.index ["payment_id"], name: "index_licenses_on_payment_id"
   end
 
   create_table "payments", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
@@ -46,4 +50,6 @@ ActiveRecord::Schema[7.0].define(version: 2022_11_07_000737) do
     t.datetime "updated_at", null: false
   end
 
+  add_foreign_key "licenses", "customers"
+  add_foreign_key "licenses", "payments"
 end
