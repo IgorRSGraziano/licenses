@@ -28,9 +28,22 @@ class WebhookController < ApplicationController
         return render json: { sucess: false, message: "Token já gerado na primeira parcela. Parcela: #{installment}" },
                       status: :ok
       end
-      license = License.new(key: SecureRandom.uuid, status: :inactive)
+      email = req.data.buyer.email
+
+      customer = Customer.new email: email
+      customer.save
+
+      payment = Payment.new billing_type: req.data.purchase.payment.type,
+                            installment: installment,
+                            value: req.data.purchase.price.value,
+                            plan: req.data.subscription.plan.name,
+                            external_id: req.data.purchase.transaction
+
+      payment.save
+
+      license = License.new key: SecureRandom.uuid, status: :inactive, payment_id: payment.id, customer_id: customer.id
       license.save
-      # LicenseMailer.send_license(to: req.data.buyer.email, license: license).deliver_now
+      LicenseMailer.send_license(to: email, license: license).deliver_now
 
       return render json: { sucess: true, message: "Gerado chave #{license.key} para o cliente #{req.data.buyer.email}" },
                     status: :ok

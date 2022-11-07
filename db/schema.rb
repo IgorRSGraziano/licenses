@@ -33,7 +33,7 @@ ActiveRecord::Schema[7.0].define(version: 2022_11_07_001927) do
   end
 
   create_table "payments", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
-    t.string "type"
+    t.string "billing_type"
     t.string "external_id"
     t.integer "installment"
     t.decimal "value", precision: 10
