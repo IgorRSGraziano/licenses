@@ -13,6 +13,8 @@ class WebhookController < ApplicationController
 
       # TODO passar para constante ENUM
       events = { PURCHASE_CANCELED: 0,
+                 PURCHASE_COMPLETE: 1,
+                 PURCHASE_BILLET_PRINTED: 2,
                  PURCHASE_APPROVED: 3,
                  PURCHASE_PROTEST: 4,
                  PURCHASE_REFUNDED: 5,
@@ -20,10 +22,18 @@ class WebhookController < ApplicationController
                  PURCHASE_EXPIRED: 7,
                  PURCHASE_DELAYED: 8 }
 
+      buy_events = [events[:PURCHASE_COMPLETE], events[:PURCHASE_APPROVED]]
+      cancel_events = [events[:PURCHASE_CANCELED],
+                       events[:PURCHASE_PROTEST],
+                       events[:PURCHASE_REFUNDED],
+                       events[:PURCHASE_CHARGEBACK],
+                       events[:PURCHASE_EXPIRED],
+                       events[:PURCHASE_DELAYED]]
+
       req.event = events[req.event.to_sym]
 
       # TODO: Passar responsabilidade para o model
-      if req.event == events[:PURCHASE_APPROVED]
+      if buy_events.include?(req.event)
         installment = req.data.purchase.payment.installments_number
         if installment > 1
           return render json: { sucess: false, message: "Token já gerado na primeira parcela. Parcela: #{installment}" },
@@ -48,6 +58,10 @@ class WebhookController < ApplicationController
 
         return render json: { sucess: true, message: "Gerado chave #{license.key} para o cliente #{req.data.buyer.email}" },
                       status: :ok
+      else
+        if cancel_events.include?(req.event)
+          license = Payment.find_by(external_id: req.data.purchase.transaction).license
+        end
       end
 
       render json: { sucess: false, message: "Evento não configurado #{event_s}" },
