@@ -58,10 +58,13 @@ class WebhookController < ApplicationController
 
         return render json: { sucess: true, message: "Gerado chave #{license.key} para o cliente #{req.data.buyer.email}" },
                       status: :ok
-      else
-        if cancel_events.include?(req.event)
-          license = Payment.find_by(external_id: req.data.purchase.transaction).license
-        end
+      elsif cancel_events.include?(req.event)
+        license = Payment.find_by(external_id: req.data.purchase.transaction).license
+        license.status = :suspended
+        license.save
+        LicenseMailer.cancel_license(to: req.data.buyer.email, license: license).deliver_now
+
+        return render json: { sucess: true, message: "Licença #{license.key} cancelada para o cliente #{req.data.buyer.email}" }
       end
 
       render json: { sucess: false, message: "Evento não configurado #{event_s}" },
