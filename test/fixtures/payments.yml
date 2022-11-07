@@ -1,0 +1,15 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  type: 
+  external_id: MyString
+  installment: 1
+  value: 9.99
+  plan: MyString
+
+two:
+  type: 
+  external_id: MyString
+  installment: 1
+  value: 9.99
+  plan: MyString

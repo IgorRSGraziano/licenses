@@ -1,0 +1,32 @@
+<div id="<%= dom_id payment %>">
+  <p class="my-5">
+    <strong class="block font-medium mb-1">Type:</strong>
+    <%= payment.type %>
+  </p>
+
+  <p class="my-5">
+    <strong class="block font-medium mb-1">External:</strong>
+    <%= payment.external_id %>
+  </p>
+
+  <p class="my-5">
+    <strong class="block font-medium mb-1">Installment:</strong>
+    <%= payment.installment %>
+  </p>
+
+  <p class="my-5">
+    <strong class="block font-medium mb-1">Value:</strong>
+    <%= payment.value %>
+  </p>
+
+  <p class="my-5">
+    <strong class="block font-medium mb-1">Plan:</strong>
+    <%= payment.plan %>
+  </p>
+
+  <% if action_name != "show" %>
+    <%= link_to "Show this payment", payment, class: "rounded-lg py-3 px-5 bg-gray-100 inline-block font-medium" %>
+    <%= link_to 'Edit this payment', edit_payment_path(payment), class: "rounded-lg py-3 ml-2 px-5 bg-gray-100 inline-block font-medium" %>
+    <hr class="mt-6">
+  <% end %>
+</div>
