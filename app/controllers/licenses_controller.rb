@@ -1,5 +1,8 @@
 class LicensesController < ApplicationController
   before_action :set_license, only: %i[show edit update destroy change_status]
+  before_action :set_license_key, only: %i[activate]
+  skip_before_action :verify_authenticity_token, only: :activate
+  skip_before_action :authorized, only: :activate
 
   # GET /licenses or /licenses.json
   def index
@@ -61,6 +64,15 @@ class LicensesController < ApplicationController
     redirect_to licenses_path, notice: 'License status was successfully changed.'
   end
 
+  # PUT /licenses/activate/:id
+  def activate
+    return render json: { succes: 'false', message: 'Licença não encontrada.' }, status: :not_found if @license.nil?
+    return render json: { succes: 'false', message: 'Licença expirada!' }, status: :unprocessable_entity unless @license.inactive?
+
+    @license.update(status: :active)
+    render json: { succes: 'true', message: 'Licença ativada com sucesso!' }, status: :ok
+  end
+
   # PATCH/PUT /licenses/1 or /licenses/1.json
   def update
     respond_to do |format|
@@ -89,6 +101,10 @@ class LicensesController < ApplicationController
   # Use callbacks to share common setup or constraints between actions.
   def set_license
     @license = License.find(params[:id])
+  end
+
+  def set_license_key
+    @license = License.find_by(key: params[:key])
   end
 
   # Only allow a list of trusted parameters through.

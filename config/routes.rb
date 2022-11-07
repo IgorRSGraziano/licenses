@@ -6,12 +6,12 @@ Rails.application.routes.draw do
   # Defines the root path route ("/")
   # root "articles#index"
 
-
   root to: "licenses#index"
 
   get 'licenses/import', to: 'licenses#import'
   post 'licenses/import', to: 'licenses#import_create'
   put 'licenses/change_status', to: 'licenses#change_status'
+  put 'licenses/activate/:key', to: 'licenses#activate'
   resources :licenses
 
   get 'login', to: 'sessions#new'
