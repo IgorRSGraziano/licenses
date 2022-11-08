@@ -144,9 +144,10 @@ GEM
     parallel (1.22.1)
     parser (3.1.2.1)
       ast (~> 2.4.1)
+    passenger (6.0.15)
+      rack
+      rake (>= 0.8.1)
     public_suffix (5.0.0)
-    puma (5.6.5)
-      nio4r (~> 2.0)
     racc (1.6.0)
     rack (2.2.4)
     rack-test (2.0.2)
@@ -252,7 +253,7 @@ DEPENDENCIES
   jbuilder
   kaminari (~> 1.2, >= 1.2.2)
   mysql2 (~> 0.5)
-  puma (~> 5.0)
+  passenger
   rails (~> 7.0.4)
   rubocop
   selenium-webdriver
