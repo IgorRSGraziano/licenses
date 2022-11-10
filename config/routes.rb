@@ -12,6 +12,7 @@ Rails.application.routes.draw do
   post 'licenses/import', to: 'licenses#import_create'
   put 'licenses/change_status', to: 'licenses#change_status'
   put 'licenses/activate/:key', to: 'licenses#activate'
+  get '/license/status/:hash', to: 'licenses#status'
   resources :licenses
 
   get 'login', to: 'sessions#new'

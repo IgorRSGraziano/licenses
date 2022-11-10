@@ -69,10 +69,23 @@ class LicensesController < ApplicationController
     return render json: { succes: false, message: 'Licença não encontrada.' }, status: :ok if @license.nil?
     return render json: { succes: false, message: 'Licença expirada!' }, status: :ok unless @license.inactive?
 
-    token = BCrypt::Password.create(@license.key)
+    crypt = ActiveSupport::MessageEncryptor.new(ENV['CRYPT_KEY'])
+    token = crypt.encrypt_and_sign(@license.key)
 
     @license.update(status: :active)
     render json: { succes: 'true', message: 'Licença ativada com sucesso!', token: }, status: :ok
+  end
+
+  # GET /license/status/:hash
+  def status
+    crypt = ActiveSupport::MessageEncryptor.new(ENV['CRYPT_KEY'])
+    key = crypt.decrypt_and_verify(params[:hash])
+    license = License.find_by(key: key)
+
+    return render json: { active: false, message: 'Licença não encontrada.' }, status: :ok if license.nil?
+    return render json: { active: false, message: 'Licença expirada!' }, status: :ok unless license.active?
+
+    render json: { active: license.status, message: 'Licença válida.' }, status: :ok
   end
 
   # PATCH/PUT /licenses/1 or /licenses/1.json
