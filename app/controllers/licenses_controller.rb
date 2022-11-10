@@ -66,11 +66,13 @@ class LicensesController < ApplicationController
 
   # PUT /licenses/activate/:id
   def activate
-    return render json: { succes: 'false', message: 'Licença não encontrada.' }, status: :not_found if @license.nil?
-    return render json: { succes: 'false', message: 'Licença expirada!' }, status: :unprocessable_entity unless @license.inactive?
+    return render json: { succes: false, message: 'Licença não encontrada.' }, status: :ok if @license.nil?
+    return render json: { succes: false, message: 'Licença expirada!' }, status: :ok unless @license.inactive?
+
+    token = BCrypt::Password.create(@license.key)
 
     @license.update(status: :active)
-    render json: { succes: 'true', message: 'Licença ativada com sucesso!' }, status: :ok
+    render json: { succes: 'true', message: 'Licença ativada com sucesso!', token: }, status: :ok
   end
 
   # PATCH/PUT /licenses/1 or /licenses/1.json
