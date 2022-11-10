@@ -11,7 +11,7 @@
 # It's strongly recommended that you check this file into your version control system.
 
 ActiveRecord::Schema[7.0].define(version: 2022_11_07_001927) do
-  create_table "customers", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
+  create_table "customers", charset: "utf8mb4", force: :cascade do |t|
     t.string "name"
     t.string "email"
     t.string "phone"
@@ -21,7 +21,7 @@ ActiveRecord::Schema[7.0].define(version: 2022_11_07_001927) do
     t.datetime "updated_at", null: false
   end
 
-  create_table "licenses", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
+  create_table "licenses", charset: "utf8mb4", force: :cascade do |t|
     t.string "key"
     t.integer "status"
     t.datetime "created_at", null: false
@@ -32,7 +32,7 @@ ActiveRecord::Schema[7.0].define(version: 2022_11_07_001927) do
     t.index ["payment_id"], name: "index_licenses_on_payment_id"
   end
 
-  create_table "payments", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
+  create_table "payments", charset: "utf8mb4", force: :cascade do |t|
     t.string "billing_type"
     t.string "external_id"
     t.integer "installment"
@@ -42,7 +42,7 @@ ActiveRecord::Schema[7.0].define(version: 2022_11_07_001927) do
     t.datetime "updated_at", null: false
   end
 
-  create_table "users", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
+  create_table "users", charset: "utf8mb4", force: :cascade do |t|
     t.string "username"
     t.string "email"
     t.string "password_digest"
