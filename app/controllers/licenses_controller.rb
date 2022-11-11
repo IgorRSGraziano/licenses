@@ -1,8 +1,8 @@
 class LicensesController < ApplicationController
   before_action :set_license, only: %i[show edit update destroy change_status]
   before_action :set_license_key, only: %i[activate]
-  skip_before_action :verify_authenticity_token, only: :activate
-  skip_before_action :authorized, only: :activate
+  skip_before_action :authorized, only: %i[activate status]
+  skip_before_action :verify_authenticity_token, only: %i[activate status]
 
   # GET /licenses or /licenses.json
   def index
@@ -76,16 +76,16 @@ class LicensesController < ApplicationController
     render json: { succes: 'true', message: 'Licença ativada com sucesso!', token: }, status: :ok
   end
 
-  # GET /license/status/:hash
+  # GET /license/status/:key
   def status
     crypt = ActiveSupport::MessageEncryptor.new(ENV['CRYPT_KEY'])
-    key = crypt.decrypt_and_verify(params[:hash])
+    key = crypt.decrypt_and_verify(params[:key])
     license = License.find_by(key: key)
 
     return render json: { active: false, message: 'Licença não encontrada.' }, status: :ok if license.nil?
     return render json: { active: false, message: 'Licença expirada!' }, status: :ok unless license.active?
 
-    render json: { active: license.status, message: 'Licença válida.' }, status: :ok
+    render json: { active: true, message: 'Licença válida.' }, status: :ok
   end
 
   # PATCH/PUT /licenses/1 or /licenses/1.json
