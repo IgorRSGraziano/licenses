@@ -1,14 +1,14 @@
 # Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
 
 one:
-  type: 
+  billing_type:
   external_id: MyString
   installment: 1
   value: 9.99
   plan: MyString
 
 two:
-  type: 
+  billing_type:
   external_id: MyString
   installment: 1
   value: 9.99

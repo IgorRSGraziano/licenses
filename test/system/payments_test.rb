@@ -17,7 +17,7 @@ class PaymentsTest < ApplicationSystemTestCase
     fill_in "External", with: @payment.external_id
     fill_in "Installment", with: @payment.installment
     fill_in "Plan", with: @payment.plan
-    fill_in "Type", with: @payment.type
+    fill_in "billing_type", with: @payment.billing_type
     fill_in "Value", with: @payment.value
     click_on "Create Payment"
 
@@ -32,7 +32,7 @@ class PaymentsTest < ApplicationSystemTestCase
     fill_in "External", with: @payment.external_id
     fill_in "Installment", with: @payment.installment
     fill_in "Plan", with: @payment.plan
-    fill_in "Type", with: @payment.type
+    fill_in "billing_type", with: @payment.billing_type
     fill_in "Value", with: @payment.value
     click_on "Update Payment"
 
