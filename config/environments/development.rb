@@ -48,8 +48,11 @@ Rails.application.configure do
     port: ENV['SMTP_PORT'],
     user_name: ENV['SMTP_USERNAME'],
     password: ENV['SMTP_PASSWORD'],
-    authentication: 'plain',
-    enable_starttls_auto: true
+    ssl: ENV['SMTP_SSL'],
+    authentication: :login,
+    # Use this because ssl is activated but we have no certificate installed.
+    # So clients need to confirm to use the untrusted url.
+    openssl_verify_mode: 'none'
   }
   # Print deprecation notices to the Rails logger.
   config.active_support.deprecation = :log

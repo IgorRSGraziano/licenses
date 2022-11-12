@@ -62,7 +62,7 @@ class WebhookController < ApplicationController
         license = Payment.find_by(external_id: req.data.purchase.transaction).license
         license.status = :suspended
         license.save
-        LicenseMailer.cancel_license(to: req.data.buyer.email, license: license).deliver_now
+        LicenseMailer.cancel_license(to: req.data.buyer.email, license: license).deliver_now!
 
         return render json: { sucess: true, message: "Licença #{license.key} cancelada para o cliente #{req.data.buyer.email}" }
       end
