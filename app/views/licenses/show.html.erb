@@ -1,10 +1,30 @@
-<p style="color: green"><%= notice %></p>
+<%
+  @customer = @license.customer
+  @payment = @license.payment
+%>
 
-<%= render @license %>
+<div class="mx-auto md:w-2/3 w-full flex">
+  <div class="mx-auto">
+    <% if notice.present? %>
+      <p class="py-2 px-3 bg-green-50 mb-5 text-green-500 font-medium rounded-lg inline-block" id="notice"><%= notice %></p>
+    <% end %>
+    <h1>License</h1>
 
-<div>
-  <%= link_to "Edit this license", edit_license_path(@license) %> |
-  <%= link_to "Back to licenses", licenses_path %>
+    <%= render @license %>
 
-  <%= button_to "Destroy this license", @license, method: :delete %>
+    <%= link_to "Edit this license", edit_license_path(@license), class: "mt-2 rounded-lg py-3 px-5 bg-gray-100 inline-block font-medium" %>
+    <div class="inline-block ml-2">
+      <%= button_to "Destroy this license", @license, method: :delete, class: "mt-2 rounded-lg py-3 px-5 bg-gray-100 font-medium" %>
+    </div>
+    <%= link_to "Back to licenses", licenses_path, class: "ml-2 rounded-lg py-3 px-5 bg-gray-100 inline-block font-medium" %>
+  </div>
 </div>
+
+<% unless @customer.nil? %>
+  <%= render :template => 'customers/show' %>
+<% end %>
+
+<% unless @payment.nil? %>
+  <%= render :template => 'payments/show' %>
+<% end %>
+
