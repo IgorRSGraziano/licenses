@@ -41,7 +41,7 @@ class WebhookController < ApplicationController
         end
         email = req.data.buyer.email
 
-        customer = Customer.new email: email, id: 1
+        customer = Customer.new email: email
         customer.save
 
         payment = Payment.new billing_type: req.data.purchase.payment.type,
