@@ -81,6 +81,7 @@ class LicensesController < ApplicationController
   def inactivate
     return render json: { succes: false, message: 'Licença não encontrada.' }, status: :ok if @license.nil?
     return render json: { succes: false, message: 'Licença expirada!' }, status: :ok unless @license.active?
+
     @license.update(status: :inactive)
 
     render json: { succes: true, message: 'Licença inativada.' }, status: :ok
