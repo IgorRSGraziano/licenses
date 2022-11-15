@@ -18,7 +18,7 @@
       <% ['Key', 'Created At', 'Updated At', 'Customer', 'Status', 'Actions'].each do |text| %>
         <th class="border-b dark:border-slate-600 break-words font-medium text-center p-1 pt-6 py-3 text-slate-400 dark:text-slate-200 text-left">
           <a href="<%= add_param_to_url request.original_url, { key: 'sort', value: "#{text} DESC" } %>">
-            <%= icon('fa-solid', 'arrow-down')%>
+            <%= icon('fa-solid', sort_arrow(request.original_url, text))%>
             <%= text %>
           </a>
         </th>
