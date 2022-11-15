@@ -3,6 +3,9 @@ module LicensesHelper
     uri = URI.parse(url)
     query = Rack::Utils.parse_query(uri.query)
     sort = query['sort']
+
+    return if sort.nil?
+
     sort_order = sort.split(' ')[1]&.downcase
     sort_field = sort.split(' ')[0]&.downcase
     if (!sort_order.nil? || !sort_field.nil?) && sort_field == param.downcase
@@ -18,9 +21,13 @@ module LicensesHelper
     uri = URI.parse(url)
     query = Rack::Utils.parse_query(uri.query)
     sort = query['sort']
-    sort_order = sort.split(' ')[1]&.downcase
-    sort_field = sort.split(' ')[0]&.downcase
-    sort_order = sort_order == 'asc' ? 'desc' : 'asc'
+
+    if !sort.nil?
+      sort_order = sort.split(' ')[1]&.downcase
+      sort_order = sort_order == 'asc' ? 'desc' : 'asc'
+    else
+      sort_order = 'asc'
+    end
 
     add_param_to_url(url, { key: 'sort', value: "#{collum} #{sort_order}" })
 
