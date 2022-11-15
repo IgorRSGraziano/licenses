@@ -1,7 +1,6 @@
 class LicensesController < ApplicationController
   before_action :set_license, only: %i[show edit update destroy change_status]
   before_action :set_license_key, only: %i[activate]
-  before_action :set_license_by_token, only: %i[inactivate status]
   skip_before_action :authorized, only: %i[activate status inactivate]
   skip_before_action :verify_authenticity_token, only: %i[activate status inactivate]
 
@@ -79,18 +78,21 @@ class LicensesController < ApplicationController
 
   # PUT /licenses/inactivate
   def inactivate
-    return render json: { succes: false, message: 'Licença não encontrada.' }, status: :ok if @license.nil?
-    return render json: { succes: false, message: 'Licença expirada!' }, status: :ok unless @license.active?
+    data = request.body.read.blank? ? nil : JSON.parse(request.body.read, object_class: OpenStruct)
+    license = from_token(data[:token])
+    return render json: { succes: false, message: 'Licença não encontrada.' }, status: :ok if license.nil?
+    return render json: { succes: false, message: 'Licença expirada!' }, status: :ok unless license.active?
 
-    @license.update(status: :inactive)
+    license.update(status: :inactive)
 
     render json: { succes: true, message: 'Licença inativada.' }, status: :ok
   end
 
   # GET /license/status/:key
   def status
-    return render json: { active: false, message: 'Licença não encontrada.' }, status: :ok if @license.nil?
-    return render json: { active: false, message: 'Licença expirada!' }, status: :ok unless @license.active?
+    license = from_token(params[:key])
+    return render json: { active: false, message: 'Licença não encontrada.' }, status: :ok if license.nil?
+    return render json: { active: false, message: 'Licença expirada!' }, status: :ok unless license.active?
 
     render json: { active: true, message: 'Licença válida.' }, status: :ok
   end
@@ -125,12 +127,6 @@ class LicensesController < ApplicationController
     @license = License.find(params[:id])
   end
 
-  def set_license_by_token
-    data = request.body.read.blank? ? nil : JSON.parse(request.body.read, object_class: OpenStruct)
-    token = @@crypt.decrypt_and_verify(data[:token])
-    @license = License.find_by(key: token)
-  end
-
   def set_license_key
     data = request.body.read.blank? ? nil : JSON.parse(request.body.read, object_class: OpenStruct)
     @license = License.find_by(key: data[:key])
@@ -139,5 +135,13 @@ class LicensesController < ApplicationController
   # Only allow a list of trusted parameters through.
   def license_params
     params.require(:license).permit(:key, :status)
+  end
+
+
+  #TODO: Passar isso para o Model
+  def from_token(token)
+    crypt = ActiveSupport::MessageEncryptor.new(ENV['CRYPT_KEY'])
+    key = crypt.decrypt_and_verify(token)
+    License.find_by(key: key)
   end
 end

@@ -1,7 +1,5 @@
 class ApplicationController < ActionController::Base
 
-  @@crypt = ActiveSupport::MessageEncryptor.new(ENV['CRYPT_KEY'])
-
   helper_method :current_user
   before_action :authorized
   helper_method :logged_in?
