@@ -137,11 +137,14 @@ class LicensesController < ApplicationController
     params.require(:license).permit(:key, :status)
   end
 
-
   #TODO: Passar isso para o Model
   def from_token(token)
-    crypt = ActiveSupport::MessageEncryptor.new(ENV['CRYPT_KEY'])
-    key = crypt.decrypt_and_verify(token)
-    License.find_by(key: key)
+    begin
+      crypt = ActiveSupport::MessageEncryptor.new(ENV['CRYPT_KEY'])
+      key = crypt.decrypt_and_verify(token)
+      License.find_by(key: key)
+    rescue
+      nil
+    end
   end
 end
