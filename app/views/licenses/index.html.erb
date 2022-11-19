@@ -1,64 +1,66 @@
 <% #Pass notice to layout and remove from anothers views %>
-<% if notice.present? %>
-  <p class="py-2 px-3 bg-green-50 mb-5 text-green-500 font-medium rounded-lg inline-block" id="notice"><%= notice %></p>
-<% end %>
+<div class="w-fit">
+  <% if notice.present? %>
+    <p class="py-2 px-3 bg-green-50 mb-5 text-green-500 font-medium rounded-lg inline-block" id="notice"><%= notice %></p>
+  <% end %>
 
-<div class="flex justify-between items-center">
-  <h1>Licenses</h1>
-  <div>
-    <%= link_to "Import", licenses_import_path, class: "button" %>
-    <%= link_to "Generate", licenses_path, data: { turbo_method: "post" }, class: "button" %>
+  <div class="flex justify-between items-center">
+    <h1>Licenses</h1>
+    <div>
+      <%= link_to "Import", licenses_import_path, class: "button" %>
+      <%= link_to "Generate", licenses_path, data: { turbo_method: "post" }, class: "button" %>
+    </div>
   </div>
-</div>
 
-<div id="licenses">
-  <table class="border-collapse table-fixed w-full text-sm">
-    <thead class="bg-slate-100 shadow-md">
-    <tr>
-      <% { 'Key' => '`key`', 'Created At' => 'created_at', 'Updated At' => 'updated_at', 'Customer' => 'customer_id', 'Status' => 'status' }.each do |text, search_text| %>
-        <th class="border-b break-words font-medium text-center p-1 pt-6 py-3 text-left">
-          <a href="<%= sort_url request.original_url, search_text %>" class="text-slate-400">
-            <%= icon('fa-solid', sort_arrow(request.original_url, search_text)) %>
-            <%= text %>
-          </a>
-        </th>
-      <% end %>
-      <th class="border-b break-words font-medium text-center p-1 pt-6 py-3 text-slate-400 text-left">
-        Actions
-      </th>
-    </tr>
-    </thead>
-    <tbody class="bg-white">
-    <% @licenses.each do |license| %>
+  <div id="licenses" class="overflow-auto w-full">
+    <table class="border-collapse table-fixed text-sm max-w-full">
+      <thead class="bg-slate-100 shadow-md">
       <tr>
-        <% [license.key, license.created_at, license.updated_at, license.customer&.email].each do |data| %>
-          <td class="border-b border-slate-100 break-words p-4 px-1 m-auto text-center text-slate-500"><%= data %></td>
+        <% { 'Key' => '`key`', 'Created At' => 'created_at', 'Updated At' => 'updated_at', 'Customer' => 'customer_id', 'Status' => 'status' }.each do |text, search_text| %>
+          <th class="border-b break-words font-medium text-center p-1 pt-6 py-3 text-left">
+            <a href="<%= sort_url request.original_url, search_text %>" class="text-slate-400">
+              <%= icon('fa-solid', sort_arrow(request.original_url, search_text)) %>
+              <%= text %>
+            </a>
+          </th>
         <% end %>
-        <% #Show license background according to color
-           if license.status == "active"
-             bg = "bg-green-200"
-           elsif license.status == "inactive"
-             bg = "bg-red-200"
-           else
-             bg = "bg-blue-200"
-           end
-        %>
-        <td class="border-b border-slate-100 break-words p-4 px-1 m-auto text-center text-slate-500">
+        <th class="border-b break-words font-medium text-center p-1 pt-6 py-3 text-slate-400 text-left">
+          Actions
+        </th>
+      </tr>
+      </thead>
+      <tbody class="bg-white">
+      <% @licenses.each do |license| %>
+        <tr>
+          <% [license.key, license.created_at, license.updated_at, license.customer&.email].each do |data| %>
+            <td class="border-b border-slate-100 break-words p-4 px-1 m-auto text-center text-slate-500"><%= data %></td>
+          <% end %>
+          <% #Show license background according to color
+             if license.status == "active"
+               bg = "bg-green-200"
+             elsif license.status == "inactive"
+               bg = "bg-red-200"
+             else
+               bg = "bg-blue-200"
+             end
+          %>
+          <td class="border-b border-slate-100 break-words p-4 px-1 m-auto text-center text-slate-500">
           <span class="<%= bg %> block w-24 py-1 px-2 m-auto rounded hover:cursor-pointer" onclick="updateStatus(<%= license.id %>)">
           <%= license.status %>
           </span>
-        </td>
-        <td class="border-b border-slate-100 break-words p-4 px-1 m-auto text-center text-slate-500 w-0.5">
-          <%= link_to "View", license_path(license), class: "button" %>
-        </td>
-      </tr>
-    <% end %>
-    </table>
+          </td>
+          <td class="border-b border-slate-100 break-words p-4 px-1 m-auto text-center text-slate-500 w-0.5">
+            <%= link_to "View", license_path(license), class: "button" %>
+          </td>
+        </tr>
+      <% end %>
+      </table>
+  </div>
+
+  <%= link_to "New license", new_license_path, class: "block text-right pt-6 mr-3 font-bold underline" %>
+
+  <%= paginate @licenses %>
 </div>
-
-<%= link_to "New license", new_license_path, class: "block text-right pt-6 mr-3 font-bold underline" %>
-
-<%= paginate @licenses %>
 
 <%=
   #TODO Remover isso e passar para o turbo
