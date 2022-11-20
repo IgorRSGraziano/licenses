@@ -6,7 +6,7 @@ class LicensesController < ApplicationController
 
   # GET /licenses or /licenses.json
   def index
-    @licenses = License.order(params[:sort] ||= 'created_at DESC').page(params[:page])
+    @licenses = License.where('`key` LIKE ?', "%#{params[:q]}%").order(params[:sort] ||= 'created_at DESC').page(params[:page])
   end
 
   # GET /licenses/1 or /licenses/1.json
