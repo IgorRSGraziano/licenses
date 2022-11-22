@@ -8,7 +8,29 @@
     <%= link_to 'New customer', new_customer_path, class: "button" %>
   </div>
 
-  <div id="customers" class="min-w-full">
-    <%= render @customers %>
+  <%= render 'layouts/search' %>
+
+  <div id="customers" class="overflow-auto w-full">
+    <table class="border-collapse table-fixed text-sm max-w-full">
+      <thead class="bg-slate-100 shadow-md">
+      <% { 'Name' => 'name', 'Email' => 'email', 'Phone' => 'phone', 'Description' => 'description', 'Created At' => 'created_at', 'Updated At' => 'updated_at' }.each do |text, search_text| %>
+        <th class="border-b break-words font-medium text-center p-1 pt-6 py-3 text-left">
+          <a href="<%= sort_url request.original_url, search_text %>" class="text-slate-400">
+            <%= icon('fa-solid', sort_arrow(request.original_url, search_text)) %>
+            <%= text %>
+          </a>
+        </th>
+      <% end %>
+      </thead>
+      <tbody class="bg-white">
+      <% @customers.each do |customer| %>
+        <tr>
+          <% [customer.name, customer.email, customer.phone, customer.description, customer.created_at, customer.updated_at].each do |data| %>
+            <td class="border-b border-slate-100 break-words p-4 px-4 m-auto text-center text-slate-500"><%= data %></td>
+          <% end %>
+        </tr>
+      <% end %>
+      </tbody>
+    </table>
   </div>
 </div>
