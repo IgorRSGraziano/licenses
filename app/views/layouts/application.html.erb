@@ -1,18 +1,33 @@
 <!DOCTYPE html>
 <html>
-  <head>
-    <title>Licenses</title>
-    <meta name="viewport" content="width=device-width,initial-scale=1">
-    <%= csrf_meta_tags %>
-    <%= csp_meta_tag %>
-    <%= stylesheet_link_tag "tailwind", "inter-font", "data-turbo-track": "reload" %>
-    <%= stylesheet_link_tag "application", "data-turbo-track": "reload" %>
-    <%= javascript_importmap_tags %>
-  </head>
+<head>
+  <title>Licenses</title>
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <%= csrf_meta_tags %>
+  <%= csp_meta_tag %>
+  <%= stylesheet_link_tag "tailwind", "inter-font", "data-turbo-track": "reload" %>
+  <%= stylesheet_link_tag "application", "data-turbo-track": "reload" %>
+  <%= javascript_importmap_tags %>
+</head>
 
-  <body class="bg-slate-50 text-slate-900">
-    <main class="container mx-auto my-28 px-5">
-      <%= yield %>
-    </main>
-  </body>
+<header class="shadow-md w-full bg-slate-100">
+  <div class="flex justify-between py-5 px-3 max-w-screen-xl m-auto">
+    <div>
+      <%= link_to ENV['BRAND_NAME'], root_path, class: "font-bold text-xl" %>
+    </div>
+    <nav>
+      <ul class="flex gap-5">
+        <li><%= link_to "Licenses", licenses_path %></li>
+        <li><%= link_to "Customers", customers_path %></li>
+        <li><%= link_to "Payments", payments_path %></li>
+      </ul>
+    </nav>
+  </div>
+</header>
+
+<body class="bg-slate-50 text-slate-900">
+<main class="container mx-auto my-28 px-5">
+  <%= yield %>
+</main>
+</body>
 </html>

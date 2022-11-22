@@ -6,9 +6,6 @@
     input {
         --tw-ring-shadow: 0 0 #000 !important;
     }
-    header, footer {
-        background-color: #F0E7E9;
-    }
     a {
         @apply text-red-800;
     }
