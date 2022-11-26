@@ -23,7 +23,7 @@
 
   <div class="my-5">
     <%= form.label :customer_id %>
-    <%= form.select :customer_id, @customers_options, { include_blank: true }, data: {'tom-select' => true} %>
+    <%= form.select :customer_id, @customers_options, { include_blank: 'No customer' }, data: {'tom-select' => true} %>
   </div>
 
   <div class="inline">
