@@ -5,10 +5,17 @@
 @layer base {
     input {
         --tw-ring-shadow: 0 0 #000 !important;
+        --tw-ring-color: #000 !important;
     }
+
+    input:focus {
+        @apply border-red-800 !important;
+    }
+
     a {
         @apply text-red-800;
     }
+
     a:hover {
         @apply text-red-500 transition;
     }

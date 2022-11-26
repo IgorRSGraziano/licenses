@@ -1,10 +1,8 @@
+<div class="mx-auto md:w-2/3 w-full">
 <h1>Editing license</h1>
 
 <%= render "form", license: @license %>
 
-<br>
-
-<div>
-  <%= link_to "Show this license", @license %> |
-  <%= link_to "Back to licenses", licenses_path %>
+  <%= link_to "Show this license", @license, class: "ml-2 rounded-lg py-3 px-5 bg-gray-100 inline-block font-medium" %>
+  <%= link_to "Back to licenses", licenses_path, class: "ml-2 rounded-lg py-3 px-5 bg-gray-100 inline-block font-medium" %>
 </div>

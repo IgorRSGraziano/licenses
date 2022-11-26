@@ -3,7 +3,7 @@ class CustomersController < ApplicationController
 
   # GET /customers or /customers.json
   def index
-    @customers = Customer.all
+    @customers = Customer.where('name LIKE ?', "%#{params[:q]}%").order(params[:sort] ||= 'created_at DESC').page(params[:page])
   end
 
   # GET /customers/1 or /customers/1.json
@@ -58,13 +58,14 @@ class CustomersController < ApplicationController
   end
 
   private
-    # Use callbacks to share common setup or constraints between actions.
-    def set_customer
-      @customer = Customer.find(params[:id])
-    end
 
-    # Only allow a list of trusted parameters through.
-    def customer_params
-      params.require(:customer).permit(:name, :email, :phone, :description, :external_id)
-    end
+  # Use callbacks to share common setup or constraints between actions.
+  def set_customer
+    @customer = Customer.find(params[:id])
+  end
+
+  # Only allow a list of trusted parameters through.
+  def customer_params
+    params.require(:customer).permit(:name, :email, :phone, :description, :external_id)
+  end
 end
