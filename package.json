@@ -1,0 +1,27 @@
+{
+  "name": "licenses",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "directories": {
+    "lib": "lib",
+    "test": "test"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/IgorRSGraziano/licenses.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/IgorRSGraziano/licenses/issues"
+  },
+  "homepage": "https://github.com/IgorRSGraziano/licenses#readme",
+  "dependencies": {
+    "moment": "^2.29.4",
+    "tom-select": "^2.2.2"
+  }
+}
