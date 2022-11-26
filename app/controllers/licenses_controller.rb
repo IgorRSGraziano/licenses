@@ -18,7 +18,9 @@ class LicensesController < ApplicationController
   end
 
   # GET /licenses/1/edit
-  def edit; end
+  def edit
+    @customers_options = Customer.all.pluck :email, :id
+  end
 
   # GET /licenses/import
   def import; end
@@ -134,7 +136,7 @@ class LicensesController < ApplicationController
 
   # Only allow a list of trusted parameters through.
   def license_params
-    params.require(:license).permit(:key, :status)
+    params.require(:license).permit(:key, :status, :customer_id)
   end
 
   #TODO: Passar isso para o Model

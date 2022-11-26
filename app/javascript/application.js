@@ -3,4 +3,15 @@
 import "@hotwired/turbo-rails"
 import "controllers"
 
+document.querySelectorAll("[data-tom-select]").forEach(e => {
+    new TomSelect(e,{
+        create: false,
+        allowEmptyOption: true,
+        sortField: {
+            field: "text",
+            direction: "asc"
+        }
+    });
+})
+
 console.log("Hello")
