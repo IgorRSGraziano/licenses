@@ -21,7 +21,7 @@
         <% { 'Key' => '`key`', 'Created At' => 'created_at', 'Updated At' => 'updated_at', 'Customer' => 'customer_id', 'Status' => 'status' }.each do |text, search_text| %>
           <th class="border-b break-words font-medium text-center p-1 pt-6 py-3 text-left">
             <a href="<%= sort_url request.original_url, search_text %>" class="text-slate-400">
-              <%= icon('fa-solid', sort_arrow(request.original_url, search_text)) %>
+              <%= fa_icon(sort_arrow(request.original_url, search_text)) %>
               <%= text %>
             </a>
           </th>
