@@ -19,7 +19,7 @@
       <ul class="flex gap-5">
         <li><%= link_to "Licenses", licenses_path %></li>
         <li><%= link_to "Customers", customers_path %></li>
-<!--        <li><%#= link_to "Payments", payments_path %></li>-->
+        <!--        <li><%#= link_to "Payments", payments_path %></li>-->
       </ul>
     </nav>
   </div>
@@ -27,6 +27,9 @@
 
 <body class="bg-slate-50 text-slate-900">
 <main class="container mx-auto my-28 px-5">
+  <% if notice.present? %>
+    <p class="py-2 px-3 bg-green-50 mb-5 text-green-500 font-medium rounded-lg m-auto block w-fit" id="notice"><%= notice %></p>
+  <% end %>
   <%= yield %>
 </main>
 </body>

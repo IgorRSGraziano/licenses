@@ -1,8 +1,5 @@
 <div class="mx-auto md:w-2/3 w-full flex">
   <div class="w-full mb-5">
-    <% if notice.present? %>
-      <p class="py-2 px-3 bg-green-50 mb-5 text-green-500 font-medium rounded-lg inline-block" id="notice"><%= notice %></p>
-    <% end %>
     <div class="flex justify-between items-center">
       <h1>Customer</h1>
       <%= link_to 'Edit', edit_customer_path(@customer), class: 'button' %>
