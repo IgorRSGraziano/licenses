@@ -9,12 +9,13 @@ require 'securerandom'
 
 status = [0, 1, 2]
 
-User.create(username: 'Igor', email: 'igor@gmail.com', password: '123456')
-User.create(username: 'Hebrain', email: 'hebrain@hotmail.com', password: '123456')
+client = Client.create_or_find_by(brand: 'Client', token: '1')
+User.create(username: 'adm', email: 'adm', password: '123456', client_id: client.id)
 
 (1..20).each do |_|
   License.create(
     key: SecureRandom.uuid,
-    status: status.sample
+    status: status.sample,
+    client_id: client.id
   )
 end

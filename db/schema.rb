@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2022_12_03_183523) do
+ActiveRecord::Schema[7.0].define(version: 2022_12_03_185525) do
   create_table "clients", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.string "brand"
     t.string "token"
@@ -36,6 +36,8 @@ ActiveRecord::Schema[7.0].define(version: 2022_12_03_183523) do
     t.datetime "updated_at", null: false
     t.bigint "customer_id"
     t.bigint "payment_id"
+    t.bigint "client_id", null: false
+    t.index ["client_id"], name: "index_licenses_on_client_id"
     t.index ["customer_id"], name: "index_licenses_on_customer_id"
     t.index ["payment_id"], name: "index_licenses_on_payment_id"
   end
@@ -56,8 +58,12 @@ ActiveRecord::Schema[7.0].define(version: 2022_12_03_183523) do
     t.string "password_digest"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.bigint "client_id", null: false
+    t.index ["client_id"], name: "index_users_on_client_id"
   end
 
+  add_foreign_key "licenses", "clients"
   add_foreign_key "licenses", "customers"
   add_foreign_key "licenses", "payments"
+  add_foreign_key "users", "clients"
 end
