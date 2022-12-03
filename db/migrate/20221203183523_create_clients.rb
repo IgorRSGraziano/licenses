@@ -4,6 +4,8 @@ class CreateClients < ActiveRecord::Migration[7.0]
       t.string :brand
       t.string :token
 
+      t.index :token, unique: true
+
       t.timestamps
     end
   end
