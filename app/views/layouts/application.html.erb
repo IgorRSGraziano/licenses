@@ -9,21 +9,22 @@
   <%= stylesheet_link_tag "application", "data-turbo-track": "reload" %>
   <%= javascript_importmap_tags %>
 </head>
-
-<header class="shadow-md w-full bg-slate-100">
-  <div class="flex justify-between py-5 px-3 max-w-screen-xl m-auto">
-    <div>
-      <%= link_to ENV['BRAND_NAME'], root_path, class: "font-bold text-xl" %>
+<% if controller_name != "sessions" %>
+  <header class="shadow-md w-full bg-slate-100">
+    <div class="flex justify-between py-5 px-3 max-w-screen-xl m-auto">
+      <div>
+        <%= link_to ENV['BRAND_NAME'], root_path, class: "font-bold text-xl" %>
+      </div>
+      <nav>
+        <ul class="flex gap-5">
+          <li><%= link_to "Licenses", licenses_path %></li>
+          <li><%= link_to "Customers", customers_path %></li>
+          <!--        <li><%#= link_to "Payments", payments_path %></li>-->
+        </ul>
+      </nav>
     </div>
-    <nav>
-      <ul class="flex gap-5">
-        <li><%= link_to "Licenses", licenses_path %></li>
-        <li><%= link_to "Customers", customers_path %></li>
-        <!--        <li><%#= link_to "Payments", payments_path %></li>-->
-      </ul>
-    </nav>
-  </div>
-</header>
+  </header>
+<% end %>
 
 <body class="bg-slate-50 text-slate-900">
 <main class="container mx-auto my-28 px-5">
