@@ -20,5 +20,8 @@ Rails.application.routes.draw do
   get 'login', to: 'sessions#new'
   post 'login', to: 'sessions#create'
 
+  get 'account', to: 'user#edit'
+  put 'account', to: 'user#update', as: 'user'
+
   post 'webhook/hotmart', to: 'webhook#hotmart'
 end
