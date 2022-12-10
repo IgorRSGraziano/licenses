@@ -12,6 +12,10 @@ status = [0, 1, 2]
 client = Client.create_or_find_by(brand: 'Client', token: '1')
 User.create(username: 'adm', email: 'adm', password: '123456', client_id: client.id)
 
+{ 'HOTTOK' => 'Token HOTTOK da Hotmart', 'EMAIL_TUTORIAL_VIDEO' => 'https://youtu.be', 'EMAIL_INSTALL_VIDEO' => 'https://youtu.be' }.each do |identifier, name|
+  Parameter.create_or_find_by(identifier: identifier, name: name)
+end
+
 (1..20).each do |_|
   License.create(
     key: SecureRandom.uuid,

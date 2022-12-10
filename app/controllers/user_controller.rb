@@ -15,7 +15,9 @@ class UserController < ApplicationController
     end
   end
 
-  def edit; end
+  def edit
+    @parameters = Parameter.all
+  end
 
   def update
     @user.update(user_params)

@@ -10,8 +10,8 @@
     </div>
   <% end %>
 
+
   <div class="my-5">
-    <%= @user.username %>
     <%= form.label :username %>
     <%= form.text_field :username, class: "block shadow rounded-md border border-gray-200 outline-none px-3 py-2 mt-2 w-full" %>
   </div>
@@ -22,11 +22,30 @@
   </div>
 
   <div class="my-5">
+    Link para webhook HotMart: <%= "#{request.protocol}#{request.host_with_port}/#{@user.client.token}" %>
+  </div>
+
+  <div class="my-5">
     <%= form.label :password %>
     <%= form.text_field :password, class: "block shadow rounded-md border border-gray-200 outline-none px-3 py-2 mt-2 w-full" %>
   </div>
 
+  <div class="my-5">
+    <%= form.label :brand, "Marca" %>
+    <%= form.text_field :brand, class: "block shadow rounded-md border border-gray-200 outline-none px-3 py-2 mt-2 w-full" %>
+  </div>
+
+
+
+  <% @parameters.each do |param| %>
+    <div class="my-5">
+      <%= form.label param.name %>
+      <%= form.text_field param.name, class: "block shadow rounded-md border border-gray-200 outline-none px-3 py-2 mt-2 w-full" %>
+    </div>
+  <% end %>
+
   <div class="inline">
     <%= form.submit class: "rounded-lg py-3 px-5 bg-blue-600 text-white inline-block font-medium cursor-pointer" %>
   </div>
+
 <% end %>

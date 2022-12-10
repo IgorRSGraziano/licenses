@@ -10,8 +10,8 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2022_12_03_185525) do
-  create_table "clients", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
+ActiveRecord::Schema[7.0].define(version: 2022_12_09_005224) do
+  create_table "clients", charset: "utf8mb4", collation: "utf8mb4_general_ci", force: :cascade do |t|
     t.string "brand"
     t.string "token"
     t.datetime "created_at", null: false
@@ -19,7 +19,7 @@ ActiveRecord::Schema[7.0].define(version: 2022_12_03_185525) do
     t.index ["token"], name: "index_clients_on_token", unique: true
   end
 
-  create_table "customers", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
+  create_table "customers", charset: "utf8mb4", collation: "utf8mb4_general_ci", force: :cascade do |t|
     t.string "name"
     t.string "email"
     t.string "phone"
@@ -29,7 +29,7 @@ ActiveRecord::Schema[7.0].define(version: 2022_12_03_185525) do
     t.datetime "updated_at", null: false
   end
 
-  create_table "licenses", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
+  create_table "licenses", charset: "utf8mb4", collation: "utf8mb4_general_ci", force: :cascade do |t|
     t.string "key"
     t.integer "status"
     t.datetime "created_at", null: false
@@ -42,7 +42,14 @@ ActiveRecord::Schema[7.0].define(version: 2022_12_03_185525) do
     t.index ["payment_id"], name: "index_licenses_on_payment_id"
   end
 
-  create_table "payments", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
+  create_table "parameters", charset: "utf8mb4", collation: "utf8mb4_general_ci", force: :cascade do |t|
+    t.string "identifier"
+    t.string "name"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
+  create_table "payments", charset: "utf8mb4", collation: "utf8mb4_general_ci", force: :cascade do |t|
     t.string "billing_type"
     t.string "external_id"
     t.integer "installment"
@@ -52,7 +59,7 @@ ActiveRecord::Schema[7.0].define(version: 2022_12_03_185525) do
     t.datetime "updated_at", null: false
   end
 
-  create_table "users", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
+  create_table "users", charset: "utf8mb4", collation: "utf8mb4_general_ci", force: :cascade do |t|
     t.string "username"
     t.string "email"
     t.string "password_digest"
