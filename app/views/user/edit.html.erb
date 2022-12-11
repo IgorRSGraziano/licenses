@@ -10,7 +10,7 @@
     </div>
   <% end %>
 
-
+  <h1>Account</h1>
   <div class="my-5">
     <%= form.label :username %>
     <%= form.text_field :username, value: @user.username, class: "block shadow rounded-md border border-gray-200 outline-none px-3 py-2 mt-2 w-full" %>
@@ -39,13 +39,13 @@
 
   <% @parameters.each do |param| %>
     <div class="my-5">
-      <%= form.label param.name %>
-      <%= form.text_field param.name, value: @user.client.parameters_clients.find {|e| e.parameter_id == param.id}, class: "block shadow rounded-md border border-gray-200 outline-none px-3 py-2 mt-2 w-full" %>
+      <%= form.label "param_#{param.id}", param.name %>
+      <%= form.text_field "param_#{param.id}", value: @user.client.parameters_clients.find_by(parameter_id: param.id)&.value, class: "block shadow rounded-md border border-gray-200 outline-none px-3 py-2 mt-2 w-full" %>
     </div>
   <% end %>
 
   <div class="inline">
-    <%= form.submit class: "rounded-lg py-3 px-5 bg-blue-600 text-white inline-block font-medium cursor-pointer" %>
+    <%= form.submit class: "button" %>
   </div>
 
 <% end %>

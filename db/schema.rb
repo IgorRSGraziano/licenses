@@ -50,10 +50,12 @@ ActiveRecord::Schema[7.0].define(version: 2022_12_11_193137) do
   end
 
   create_table "parameters_clients", charset: "utf8mb4", collation: "utf8mb4_general_ci", force: :cascade do |t|
+    t.string "value"
     t.bigint "client_id", null: false
     t.bigint "parameter_id", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.index ["client_id", "parameter_id"], name: "index_parameters_clients_on_client_id_and_parameter_id", unique: true
     t.index ["client_id"], name: "index_parameters_clients_on_client_id"
     t.index ["parameter_id"], name: "index_parameters_clients_on_parameter_id"
   end

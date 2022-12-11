@@ -10,9 +10,9 @@ require 'securerandom'
 status = [0, 1, 2]
 
 client = Client.create_or_find_by(brand: 'Client', token: '1')
-User.create(username: 'adm', email: 'adm', password: '123456', client_id: client.id)
+User.create(username: 'adm', email: 'adm@adm.com', password: '123456', client_id: client.id)
 
-{ 'HOTTOK' => 'Token HOTTOK da Hotmart', 'EMAIL_TUTORIAL_VIDEO' => 'https://youtu.be', 'EMAIL_INSTALL_VIDEO' => 'https://youtu.be' }.each do |identifier, name|
+{ 'HOTTOK' => 'Token HOTTOK da Hotmart', 'EMAIL_TUTORIAL_VIDEO' => 'Link do vídeo de tutorial (Usado no envio de e-mail)', 'EMAIL_INSTALL_VIDEO' => 'Link do vídeo de instalação (Usado no envio de e-mail)' }.each do |identifier, name|
   Parameter.create_or_find_by(identifier: identifier, name: name)
 end
 
