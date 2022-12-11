@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2022_12_09_005224) do
+ActiveRecord::Schema[7.0].define(version: 2022_12_11_193137) do
   create_table "clients", charset: "utf8mb4", collation: "utf8mb4_general_ci", force: :cascade do |t|
     t.string "brand"
     t.string "token"
@@ -49,6 +49,15 @@ ActiveRecord::Schema[7.0].define(version: 2022_12_09_005224) do
     t.datetime "updated_at", null: false
   end
 
+  create_table "parameters_clients", charset: "utf8mb4", collation: "utf8mb4_general_ci", force: :cascade do |t|
+    t.bigint "client_id", null: false
+    t.bigint "parameter_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["client_id"], name: "index_parameters_clients_on_client_id"
+    t.index ["parameter_id"], name: "index_parameters_clients_on_parameter_id"
+  end
+
   create_table "payments", charset: "utf8mb4", collation: "utf8mb4_general_ci", force: :cascade do |t|
     t.string "billing_type"
     t.string "external_id"
@@ -72,5 +81,7 @@ ActiveRecord::Schema[7.0].define(version: 2022_12_09_005224) do
   add_foreign_key "licenses", "clients"
   add_foreign_key "licenses", "customers"
   add_foreign_key "licenses", "payments"
+  add_foreign_key "parameters_clients", "clients"
+  add_foreign_key "parameters_clients", "parameters"
   add_foreign_key "users", "clients"
 end

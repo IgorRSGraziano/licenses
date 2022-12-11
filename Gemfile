@@ -10,7 +10,7 @@ gem 'rails', '~> 7.0.4'
 gem 'sprockets-rails'
 
 # Use mysql as the database for Active Record
-gem 'mysql2', "~> 0.5"
+gem 'mysql2', '~> 0.5'
 
 # Use the Puma web server [https://github.com/puma/puma]
 gem 'puma', '~> 5.0'
@@ -57,7 +57,7 @@ gem 'bcrypt'
 gem 'figaro', '~> 1.2'
 
 # To deploy in nginx
-gem "passenger"
+gem 'passenger'
 
 group :development, :test do
   # See https://guides.rubyonrails.org/debugging_rails_applications.html#debugging-with-the-debug-gem
