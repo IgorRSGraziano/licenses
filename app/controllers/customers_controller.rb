@@ -3,8 +3,12 @@ class CustomersController < ApplicationController
 
   # GET /customers or /customers.json
   def index
-    @customers = Customer.where('name LIKE ? AND client_id = ?', "%#{params[:q]}%",
-                                current_user.client.id).order(params[:sort] ||= 'created_at DESC').page(params[:page])
+    @customers = if params[:q].present?
+                   Customer.where('name LIKE ? AND client_id = ?', "%#{params[:q]}%",
+                                  current_user.client.id).order(params[:sort] ||= 'created_at DESC').page(params[:page])
+                 else
+                   Customer.where(client_id: current_user.client.id).order(params[:sort] ||= 'created_at DESC').page(params[:page])
+                 end
   end
 
   # GET /customers/1 or /customers/1.json
