@@ -6,7 +6,9 @@ class LicensesController < ApplicationController
 
   # GET /licenses or /licenses.json
   def index
-    @licenses = License.where('`key` LIKE ?', "%#{params[:q]}%").order(params[:sort] ||= 'created_at DESC').page(params[:page])
+    @licenses = License.where('`key` LIKE ? AND client_id = ?', "%#{params[:q]}%", current_user.client.id).order(
+      params[:sort] ||= 'created_at DESC'
+    ).page(params[:page])
   end
 
   # GET /licenses/1 or /licenses/1.json
@@ -139,7 +141,7 @@ class LicensesController < ApplicationController
     params.require(:license).permit(:key, :status, :customer_id)
   end
 
-  #TODO: Passar isso para o Model
+  # TODO: Passar isso para o Model
   def from_token(token)
     begin
       crypt = ActiveSupport::MessageEncryptor.new(ENV['CRYPT_KEY'])
