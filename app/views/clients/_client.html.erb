@@ -5,13 +5,28 @@
   </p>
 
   <p class="my-5">
+    <strong class="block font-medium mb-1">Status:</strong>
+    <% if client.active %>
+      <span class="bg-green-200 block w-24 text-center py-1 px-2 rounded hover:cursor-pointer">Active</span>
+    <% else %>
+      <span class="bg-red-200 block w-24 text-center py-1 px-2 rounded hover:cursor-pointer">Inactive</span>
+    <% end %>
+  </p>
+
+  <p class="my-5">
     <strong class="block font-medium mb-1">Token:</strong>
     <%= client.token %>
   </p>
+  <p class="my-5">
+    <strong class="block font-medium mb-1">Description:</strong>
+    <%= client.description %>
+  </p>
 
   <% if action_name != "show" %>
-    <%= link_to "Show this client", client, class: "rounded-lg py-3 px-5 bg-gray-100 inline-block font-medium" %>
-    <%= link_to 'Edit this client', edit_client_path(client), class: "rounded-lg py-3 ml-2 px-5 bg-gray-100 inline-block font-medium" %>
+    <%= link_to "Show", client, class: "rounded-lg py-3 px-5 bg-gray-100 inline-block font-medium" %>
+    <%= link_to 'Edit', edit_client_path(client), class: "rounded-lg py-3 ml-2 px-5 bg-gray-100 inline-block font-medium" %>
+    <%= link_to 'Inactive', edit_client_path(client), class: "rounded-lg py-3 ml-2 px-5 bg-gray-100 inline-block font-medium" %>
+    <%= link_to 'Use', edit_client_path(client), class: "rounded-lg py-3 ml-2 px-5 bg-gray-100 inline-block font-medium" %>
     <hr class="mt-6">
   <% end %>
 </div>
