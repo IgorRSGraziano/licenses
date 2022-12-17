@@ -23,8 +23,8 @@
   </p>
 
   <p class="my-5">
-    <strong class="block font-medium mb-1">Email</strong>
-    <%= client.users.find_by(admin: false).email %>
+    <strong class="block font-medium mb-1">Email:</strong>
+    <%= client.users.find_by(admin: false)&.email %>
   </p>
 
   <% if action_name != "show" %>
