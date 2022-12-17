@@ -14,6 +14,7 @@ class ClientsController < ApplicationController
   # GET /clients/new
   def new
     @client = Client.new
+    @client.users.build if @client.users.blank?
   end
 
   # GET /clients/1/edit
@@ -21,7 +22,9 @@ class ClientsController < ApplicationController
 
   # POST /clients or /clients.json
   def create
-    @client = Client.new(client_params)
+    @client = Client.new client_params
+    @client.token = SecureRandom.hex(10)
+    # @user = User.new client_params
 
     respond_to do |format|
       if @client.save
@@ -66,7 +69,7 @@ class ClientsController < ApplicationController
 
   # Only allow a list of trusted parameters through.
   def client_params
-    params.require(:client).permit(:brand)
+    params.require(:client).permit(:brand, :description, users_attributes: %i[email password])
   end
 
   def validate_permission

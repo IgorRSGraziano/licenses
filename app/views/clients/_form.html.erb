@@ -17,9 +17,23 @@
   </div>
 
   <div class="my-5">
-    <%= form.label :token %>
-    <%= form.text_field :token, class: "block shadow rounded-md border border-gray-200 outline-none px-3 py-2 mt-2 w-full" %>
+    <%= form.label :description %>
+    <%= form.text_field :description, class: "block shadow rounded-md border border-gray-200 outline-none px-3 py-2 mt-2 w-full" %>
   </div>
+
+  <% if action_name == 'new' || action_name == 'create' %>
+    <%= form.fields_for :users do |user_form| %>
+      <div class="my-5">
+        <%= user_form.label :email %>
+        <%= user_form.text_field :email, class: "block shadow rounded-md border border-gray-200 outline-none px-3 py-2 mt-2 w-full" %>
+      </div>
+
+      <div class="my-5">
+        <%= user_form.label :password %>
+        <%= user_form.text_field :password, class: "block shadow rounded-md border border-gray-200 outline-none px-3 py-2 mt-2 w-full" %>
+      </div>
+    <% end %>
+  <% end %>
 
   <div class="inline">
     <%= form.submit class: "button" %>

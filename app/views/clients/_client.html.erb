@@ -22,6 +22,11 @@
     <%= client.description %>
   </p>
 
+  <p class="my-5">
+    <strong class="block font-medium mb-1">Email</strong>
+    <%= client.users.find_by(admin: false).email %>
+  </p>
+
   <% if action_name != "show" %>
     <%= link_to "Show", client, class: "rounded-lg py-3 px-5 bg-gray-100 inline-block font-medium" %>
     <%= link_to 'Edit', edit_client_path(client), class: "rounded-lg py-3 ml-2 px-5 bg-gray-100 inline-block font-medium" %>
