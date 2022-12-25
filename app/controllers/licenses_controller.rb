@@ -3,6 +3,7 @@ class LicensesController < ApplicationController
   before_action :set_license_key, only: %i[activate]
   skip_before_action :authorized, only: %i[activate status inactivate]
   skip_before_action :verify_authenticity_token, only: %i[activate status inactivate]
+  before_action :admin_action, except: %i[index]
 
   # GET /licenses or /licenses.json
   def index

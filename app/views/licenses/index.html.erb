@@ -4,8 +4,10 @@
   <div class="flex justify-between items-center">
     <h1>Licenses</h1>
     <div class="flex">
-      <%= link_to "Import", licenses_import_path, class: "button" %>
-      <%= link_to "Generate", licenses_path, data: { turbo_method: "post" }, class: "button" %>
+      <% if current_user.admin %>
+        <%= link_to "Import", licenses_import_path, class: "button" %>
+        <%= link_to "Generate", licenses_path, data: { turbo_method: "post" }, class: "button" %>
+      <% end %>
     </div>
   </div>
 

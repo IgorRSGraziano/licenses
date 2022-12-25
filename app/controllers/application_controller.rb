@@ -12,6 +12,10 @@ class ApplicationController < ActionController::Base
     !current_user.nil?
   end
 
+  def admin_action(message = 'You are not authorized to perform this action')
+    redirect_to root_path, notice: message unless current_user.admin?
+  end
+
   def authorized
     redirect_to login_path unless logged_in?
   end

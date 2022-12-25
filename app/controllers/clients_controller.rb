@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 class ClientsController < ApplicationController
   before_action :set_client, only: %i[show edit update destroy]
-  before_action :validate_permission
+  before_action :admin_action
 
   # GET /clients or /clients.json
   def index
@@ -70,11 +70,5 @@ class ClientsController < ApplicationController
   # Only allow a list of trusted parameters through.
   def client_params
     params.require(:client).permit(:brand, :description, users_attributes: %i[email password])
-  end
-
-  def validate_permission
-    return if current_user.admin?
-
-    redirect_to root_path, notice: 'You do not have permission to access this page.'
   end
 end
