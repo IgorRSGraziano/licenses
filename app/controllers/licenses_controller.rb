@@ -32,7 +32,7 @@ class LicensesController < ApplicationController
     data = params[:licenses]
     licenses = data.split(';')
     licenses.each do |license|
-      License.create(key: license.strip, status: :inactive)
+      License.create key: license.strip, status: :inactive, client_id: current_user.client.id
     end
 
     redirect_to licenses_import_path, notice: 'Licenses were successfully imported.'
@@ -43,9 +43,9 @@ class LicensesController < ApplicationController
     data = request.body.read.blank? ? nil : JSON.parse(request.body.read, object_class: OpenStruct)
 
     @license = if data&.key.nil?
-                 License.new(key: SecureRandom.uuid, status: :inactive)
+                 License.new key: SecureRandom.uuid, status: :inactive, client_id: current_user.client.id
                else
-                 License.new(license_params)
+                 License.new license_params
                end
 
     respond_to do |format|
