@@ -22,7 +22,7 @@
   </div>
 
   <div class="my-5">
-    Hotmart webook link: <%= "#{request.protocol}#{request.host_with_port}/#{@user.client.token}" %>
+    Hotmart webook link: <%= webhook_hotmart_url @user.client.token %>
   </div>
 
   <div class="my-5">
