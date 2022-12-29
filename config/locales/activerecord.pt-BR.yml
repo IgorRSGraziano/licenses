@@ -1,10 +1,28 @@
 pt-BR:
   activerecord:
+    created_at: Criado em
+    updated_at: Atualizado em
     models:
       user:
         one: Usuário
         other: Usuários
+      license:
+        one: Licença
+        other: Licenças
+      client:
+        one: Whitelabel
+        other: Whitelabels
+      customer:
+        one: Cliente
+        other: Clientes
     attributes:
       user:
         email: Email
         password: Senha
+      license:
+        key: Chave
+      client:
+        brand: Marca
+        token: Token
+        description: Descrição
+        active: Ativo

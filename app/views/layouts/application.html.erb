@@ -17,10 +17,10 @@
       </div>
       <nav>
         <ul class="flex gap-5">
-          <li><%= link_to "Licenses", licenses_path %></li>
-          <li><%= link_to "Customers", customers_path %></li>
+          <li><%= link_to License.pl, licenses_path %></li>
+          <li><%= link_to Customer.pl, customers_path %></li>
           <% if current_user.admin? %>
-            <%= link_to "Whitelabels", clients_path %>
+            <%= link_to Client.pl, clients_path %>
           <% end %>
           <li><%= link_to "Account", user_path %></li>
           <!--        <li><%#= link_to "Payments", payments_path %></li>-->
