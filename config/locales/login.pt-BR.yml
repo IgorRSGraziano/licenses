@@ -1,0 +1,9 @@
+pt-BR:
+  login:
+    title: Logar
+    wrong: Email ou senha inválido
+    sucess: Logado com sucesso!
+  attributes:
+    user:
+      email: Email
+      password: Password

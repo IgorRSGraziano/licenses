@@ -1,0 +1,5 @@
+en:
+  login:
+    title: Login
+    wrong: Email or password is invalid
+    success: Logged in!

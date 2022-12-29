@@ -12,6 +12,9 @@ module Licenses
     config.load_defaults 7.0
     config.assets.paths << Rails.root.join('node_modules')
 
+    config.i18n.load_path += Dir[Rails.root.join('my', 'locales', '*.{rb,yml}')]
+    config.i18n.default_locale = 'pt-BR'
+
     # Configuration for the application, engines, and railties goes here.
     #
     # These settings can be overridden in specific environments using the files

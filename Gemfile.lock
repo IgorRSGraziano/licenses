@@ -254,6 +254,7 @@ DEPENDENCIES
   debug
   figaro (~> 1.2)
   font-awesome-rails (~> 4.7, >= 4.7.0.8)
+  i18n (~> 1.12)
   importmap-rails
   jbuilder
   kaminari (~> 1.2, >= 1.2.2)
