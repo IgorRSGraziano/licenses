@@ -2,7 +2,7 @@
 
   <div class="flex justify-between items-center">
     <h1>Customers</h1>
-    <%= link_to 'New customer', new_customer_path, class: "button" %>
+    <%= link_to "#{t 'actions.new'} #{Customer.h}", new_customer_path, class: "button" %>
   </div>
 
   <%= render 'layouts/search' %>
@@ -10,7 +10,7 @@
   <div id="customers" class="overflow-auto w-full">
     <table class="border-collapse table-fixed text-sm max-w-full">
       <thead class="bg-slate-100 shadow-md">
-      <% { 'Name' => 'name', 'Email' => 'email', 'Phone' => 'phone', 'Description' => 'description', 'Created At' => 'created_at', 'Updated At' => 'updated_at' }.each do |text, search_text| %>
+      <% { Customer.h(:name) => 'name', Customer.h(:email) => 'email', Customer.h(:phone) => 'phone', Customer.h(:description) => 'description', Customer.h(:created_at) => 'created_at', Customer.h(:updated_at) => 'updated_at' }.each do |text, search_text| %>
         <th class="border-b break-words font-medium text-center p-1 pt-6 py-3 text-left">
           <a href="<%= sort_url request.original_url, search_text %>" class="text-slate-400">
             <%= fa_icon(sort_arrow(request.original_url, search_text)) %>

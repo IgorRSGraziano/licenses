@@ -26,3 +26,8 @@ pt-BR:
         token: Token
         description: Descrição
         active: Ativo
+      customer:
+        name: Nome
+        email: Email
+        phone: Telefone
+        description: Descrição
