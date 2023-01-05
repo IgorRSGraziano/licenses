@@ -3,7 +3,9 @@
 one:
   identifier: MyString
   name: MyString
+  description: MyString
 
 two:
   identifier: MyString
   name: MyString
+  description: MyString
