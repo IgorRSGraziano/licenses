@@ -10,6 +10,7 @@
     </div>
   <% end %>
 
+  <%#= TODO: Adicionar flash message de sucesso/erro %>
   <h1>Account</h1>
   <div class="my-5">
     <%= form.label :username %>
@@ -37,7 +38,7 @@
 
   <br>
   <br>
-  <%= render 'clients/parameters', parameters: @parameters, form: form, client: @client.id %>
+  <%= render 'clients/parameters', parameters: @parameters, form: form, client: current_user.client %>
 
   <div class="inline">
     <%= form.submit class: "button" %>
