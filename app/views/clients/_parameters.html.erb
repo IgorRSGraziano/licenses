@@ -1,10 +1,11 @@
 <h1>Parameters</h1>
+<% client ||= current_user.client %>
 <% parameters.each do |param| %>
   <div class="my-5">
     <%= form.label "param_#{param.id}", param.name %>
     <% unless param.description.blank? %>
       <span class="block bg-slate-200 px-4 py-1 text-xs rounded my-2 w-fit"><%= fa_icon('info-circle', class: 'text-slate-500 pr-3') %><%= param.description %></span>
     <% end %>
-    <%= form.text_field "param_#{param.id}", value: current_user.client.parameters_clients.find_by(parameter_id: param.id)&.value, class: "block shadow rounded-md border border-gray-200 outline-none px-3 py-2 mt-2 w-full" %>
+    <%= form.text_field "param_#{param.id}", value: client.parameters_clients.find_by(parameter_id: param.id)&.value, class: "block shadow rounded-md border border-gray-200 outline-none px-3 py-2 mt-2 w-full" %>
   </div>
 <% end %>

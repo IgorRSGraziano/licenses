@@ -23,11 +23,7 @@ class UserController < ApplicationController
     @user.update user_params
     @user.client.update brand: params[:brand]
 
-    Parameter.all.each do |parameter|
-      param_value = params["param_#{parameter.id}"]
-      parameter = ParametersClient.create_or_find_by client_id: @user.client.id, parameter_id: parameter.id
-      parameter.update value: param_value
-    end
+    ParametersHelper.update_by_client current_user.client_id, params
   end
 
   private

@@ -37,7 +37,7 @@
 
   <br>
   <br>
-  <%= render 'clients/parameters', parameters: @parameters, form: form %>
+  <%= render 'clients/parameters', parameters: @parameters, form: form, client: @client.id %>
 
   <div class="inline">
     <%= form.submit class: "button" %>
