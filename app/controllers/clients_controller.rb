@@ -14,11 +14,14 @@ class ClientsController < ApplicationController
   # GET /clients/new
   def new
     @client = Client.new
+    @parameters = Parameter.all
     @client.users.build if @client.users.blank?
   end
 
   # GET /clients/1/edit
-  def edit; end
+  def edit
+    @parameters = Parameter.all
+  end
 
   # POST /clients or /clients.json
   def create
