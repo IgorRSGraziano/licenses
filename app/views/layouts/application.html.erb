@@ -21,6 +21,7 @@
           <li><%= link_to Customer.pl, customers_path %></li>
           <% if current_user.admin? %>
             <%= link_to Client.pl, clients_path %>
+            <%= link_to Parameter.pl, parameters_path %>
           <% end %>
           <li><%= link_to t('application.account'), user_path %></li>
           <!--        <li><%#= link_to "Payments", payments_path %></li>-->

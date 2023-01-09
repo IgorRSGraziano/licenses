@@ -40,6 +40,7 @@
   <% @parameters.each do |param| %>
     <div class="my-5">
       <%= form.label "param_#{param.id}", param.name %>
+      <span class="block"><%= param.description %></span>
       <%= form.text_field "param_#{param.id}", value: @user.client.parameters_clients.find_by(parameter_id: param.id)&.value, class: "block shadow rounded-md border border-gray-200 outline-none px-3 py-2 mt-2 w-full" %>
     </div>
   <% end %>
