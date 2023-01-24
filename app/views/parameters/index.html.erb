@@ -1,0 +1,10 @@
+<div class="w-full">
+  <div class="flex justify-between items-center">
+    <h1 >Parameters</h1>
+    <%= link_to 'New parameter', new_parameter_path, class: "button" %>
+  </div>
+
+  <div id="parameters" class="min-w-full">
+    <%= render @parameters %>
+  </div>
+</div>

@@ -14,11 +14,14 @@ class ClientsController < ApplicationController
   # GET /clients/new
   def new
     @client = Client.new
+    @parameters = Parameter.all
     @client.users.build if @client.users.blank?
   end
 
   # GET /clients/1/edit
-  def edit; end
+  def edit
+    @parameters = Parameter.all
+  end
 
   # POST /clients or /clients.json
   def create
@@ -26,8 +29,10 @@ class ClientsController < ApplicationController
     @client.token = SecureRandom.hex(10)
     # @user = User.new client_params
 
+
     respond_to do |format|
       if @client.save
+        ParametersHelper.update_by_client @client.id, params[:client]
         format.html { redirect_to client_url(@client), notice: 'Client was successfully created.' }
         format.json { render :show, status: :created, location: @client }
       else
@@ -41,6 +46,7 @@ class ClientsController < ApplicationController
   def update
     respond_to do |format|
       if @client.update(client_params)
+        ParametersHelper.update_by_client params[:id], params
         format.html { redirect_to client_url(@client), notice: 'Client was successfully updated.' }
         format.json { render :show, status: :ok, location: @client }
       else

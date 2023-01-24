@@ -10,6 +10,7 @@
     </div>
   <% end %>
 
+  <%#= TODO: Adicionar flash message de sucesso/erro %>
   <h1>Account</h1>
   <div class="my-5">
     <%= form.label :username %>
@@ -35,14 +36,9 @@
     <%= form.text_field :brand, value: @user.client.brand, class: "block shadow rounded-md border border-gray-200 outline-none px-3 py-2 mt-2 w-full" %>
   </div>
 
-
-
-  <% @parameters.each do |param| %>
-    <div class="my-5">
-      <%= form.label "param_#{param.id}", param.name %>
-      <%= form.text_field "param_#{param.id}", value: @user.client.parameters_clients.find_by(parameter_id: param.id)&.value, class: "block shadow rounded-md border border-gray-200 outline-none px-3 py-2 mt-2 w-full" %>
-    </div>
-  <% end %>
+  <br>
+  <br>
+  <%= render 'clients/parameters', parameters: @parameters, form: form, client: current_user.client %>
 
   <div class="inline">
     <%= form.submit class: "button" %>
