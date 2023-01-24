@@ -143,8 +143,9 @@ class LicensesController < ApplicationController
   end
 
   # TODO: Passar isso para o Model
-  def from_token(token)
+  def   from_token(token)
     begin
+      token = token.gsub ' ', '+'
       crypt = ActiveSupport::MessageEncryptor.new(ENV['CRYPT_KEY'])
       key = crypt.decrypt_and_verify(token)
       License.find_by(key: key)
