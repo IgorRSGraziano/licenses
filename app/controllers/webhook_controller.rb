@@ -16,7 +16,6 @@ class WebhookController < ApplicationController
     req = JSON.parse(request.body.read, object_class: OpenStruct)
     event_s = req.event
 
-    # TODO passar para constante ENUM
     events = { PURCHASE_CANCELED: 0,
                PURCHASE_COMPLETE: 1,
                PURCHASE_BILLET_PRINTED: 2,
@@ -79,6 +78,35 @@ class WebhookController < ApplicationController
 
   rescue => e
     render json: { sucess: false, message: e.message, stacktrace: e.backtrace }, status: :internal_server_error
+
+  end
+
+  def asaas
+    if @client.nil?
+      return render json: { sucess: false, message: 'Cliente não identificado' },
+                    status: :forbidden
+    end
+    charge = JSON.parse(request.body.read, object_class: OpenStruct)
+    # TODO: Criar parametro de asaas acces token
+    if request.headers['asaas-access-token'] != @client.param('ASAAS_ACCESS_TOKEN').value(@client.id)
+      return render json: { sucess: false, message: 'Token inválido' },
+                    status: :forbidden
+    end
+    nonPaymentStatus = %w[PAYMENT_REFUNDED PAYMENT_OVERDUE PAYMENT_DUNNING_REQUESTED]
+    paymentStatus = %w[PAYMENT_CONFIRMED PAYMENT_RECEIVED]
+
+    if charge.event == 'PAYMENT_RECEIVED' && charge.payment.billingType == 'CREDIT_CARD'
+      return render json: { succes: false, message: 'Licença não gerada, pagamento recebido, licença foi gerada na confirmação' }
+    end
+    if paymentStatus.include? charge.event
+      if charge.payment.paymentLink
+        return render json: { succes: false, message: 'Compra não foi gerado por link de pagamento' }
+      end
+      if charge.payment.installments > 1
+        return render json: { succes: false, message: 'Pagamento parcelado, token gerado na primeira parcela.' }
+      end
+
+    end
 
   end
 
