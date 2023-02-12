@@ -48,11 +48,14 @@ class WebhookController < ApplicationController
       customer = Customer.new email: email
       customer.save
 
+      paymentIntegration = PaymentIntegration.find_by identifier: 'HOTMART'
+
       payment = Payment.new billing_type: req.data.purchase.payment.type,
                             installment: installment,
                             value: req.data.purchase.price.value,
                             plan: req.data.subscription.plan.name,
-                            external_id: req.data.purchase.transaction
+                            external_id: req.data.purchase.transaction,
+                            payment_integration_id: paymentIntegration.id
 
       payment.save
 
