@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2023_01_05_204250) do
+ActiveRecord::Schema[7.0].define(version: 2023_02_12_170429) do
   create_table "clients", charset: "utf8mb4", collation: "utf8mb4_general_ci", force: :cascade do |t|
     t.string "brand"
     t.string "token"
@@ -65,6 +65,14 @@ ActiveRecord::Schema[7.0].define(version: 2023_01_05_204250) do
     t.index ["parameter_id"], name: "index_parameters_clients_on_parameter_id"
   end
 
+  create_table "payment_integrations", charset: "utf8mb4", collation: "utf8mb4_general_ci", force: :cascade do |t|
+    t.string "identifier"
+    t.string "name"
+    t.string "description"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
   create_table "payments", charset: "utf8mb4", collation: "utf8mb4_general_ci", force: :cascade do |t|
     t.string "billing_type"
     t.string "external_id"
@@ -73,6 +81,8 @@ ActiveRecord::Schema[7.0].define(version: 2023_01_05_204250) do
     t.string "plan"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.bigint "payment_integration_id", null: false
+    t.index ["payment_integration_id"], name: "index_payments_on_payment_integration_id"
   end
 
   create_table "users", charset: "utf8mb4", collation: "utf8mb4_general_ci", force: :cascade do |t|
@@ -93,5 +103,6 @@ ActiveRecord::Schema[7.0].define(version: 2023_01_05_204250) do
   add_foreign_key "licenses", "payments"
   add_foreign_key "parameters_clients", "clients"
   add_foreign_key "parameters_clients", "parameters"
+  add_foreign_key "payments", "payment_integrations"
   add_foreign_key "users", "clients"
 end

@@ -7,7 +7,7 @@ class LicensesController < ApplicationController
 
   # GET /licenses or /licenses.json
   def index
-    @licenses = License.where('`key` LIKE ? AND client_id = ?', "%#{params[:q]}%", current_user.client.id).order(
+    @licenses = License.left_joins(:payment).where('`key` LIKE ? AND client_id = ?', "%#{params[:q]}%", current_user.client.id).order(
       params[:sort] ||= 'created_at DESC'
     ).page(params[:page])
   end
@@ -143,14 +143,12 @@ class LicensesController < ApplicationController
   end
 
   # TODO: Passar isso para o Model
-  def   from_token(token)
-    begin
-      token = token.gsub ' ', '+'
-      crypt = ActiveSupport::MessageEncryptor.new(ENV['CRYPT_KEY'])
-      key = crypt.decrypt_and_verify(token)
-      License.find_by(key: key)
-    rescue
-      nil
-    end
+  def from_token(token)
+    token = token.gsub ' ', '+'
+    crypt = ActiveSupport::MessageEncryptor.new(ENV['CRYPT_KEY'])
+    key = crypt.decrypt_and_verify(token)
+    License.find_by(key: key)
+  rescue
+    nil
   end
 end

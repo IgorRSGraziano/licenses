@@ -17,7 +17,7 @@
     <table class="border-collapse table-fixed text-sm max-w-full">
       <thead class="bg-slate-100 shadow-md">
       <tr>
-        <% { License.h(:id) => 'id', License.h(:key) => '`key`', Client.h => 'client_id', License.h(:created_at) => 'created_at', License.h(:updated_at) => 'updated_at', Customer.h => 'customer_id', License.h(:status) => 'status' }.each do |text, search_text| %>
+        <% { License.h(:id) => 'licenses.id', License.h(:key) => 'licenses.`key`', Client.h => 'licenses.client_id', "Integração" => 'payments.payment_integration_id', License.h(:created_at) => 'licenses.created_at', License.h(:updated_at) => 'licenses.updated_at', Customer.h => 'licenses.customer_id', License.h(:status) => 'licenses.status' }.each do |text, search_text| %>
           <th class="border-b break-words font-medium text-center p-1 pt-6 py-3 text-left">
             <a href="<%= sort_url request.original_url, search_text %>" class="text-slate-400">
               <%= fa_icon(sort_arrow(request.original_url, search_text)) %>
@@ -33,7 +33,7 @@
       <tbody class="bg-white">
       <% @licenses.each do |license| %>
         <tr>
-          <% [license.id, license.key, license.client.brand, license.created_at, license.updated_at, license.customer&.email].each do |data| %>
+          <% [license.id, license.key, license.client.brand, license.payment&.payment_integration&.name, license.created_at, license.updated_at, license.customer&.email].each do |data| %>
             <td class="border-b border-slate-100 break-words p-4 px-4 m-auto text-center text-slate-500"><%= data %></td>
           <% end %>
           <% #TODO colocar input select nas opções

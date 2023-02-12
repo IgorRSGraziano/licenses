@@ -1,0 +1,2 @@
+class PaymentIntegration < ApplicationRecord
+end
