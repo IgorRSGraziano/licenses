@@ -1,4 +1,5 @@
 Rails.application.routes.draw do
+  resources :links
   resources :parameters
   resources :clients
   resources :payments, except: [:index]

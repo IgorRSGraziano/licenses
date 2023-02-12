@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2023_02_12_170429) do
+ActiveRecord::Schema[7.0].define(version: 2023_02_12_200908) do
   create_table "clients", charset: "utf8mb4", collation: "utf8mb4_general_ci", force: :cascade do |t|
     t.string "brand"
     t.string "token"
@@ -44,6 +44,18 @@ ActiveRecord::Schema[7.0].define(version: 2023_02_12_170429) do
     t.index ["client_id"], name: "index_licenses_on_client_id"
     t.index ["customer_id"], name: "index_licenses_on_customer_id"
     t.index ["payment_id"], name: "index_licenses_on_payment_id"
+  end
+
+  create_table "links", charset: "utf8mb4", collation: "utf8mb4_general_ci", force: :cascade do |t|
+    t.string "name"
+    t.string "description"
+    t.string "link"
+    t.bigint "payment_integration_id", null: false
+    t.bigint "client_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["client_id"], name: "index_links_on_client_id"
+    t.index ["payment_integration_id"], name: "index_links_on_payment_integration_id"
   end
 
   create_table "parameters", charset: "utf8mb4", collation: "utf8mb4_general_ci", force: :cascade do |t|
@@ -101,6 +113,8 @@ ActiveRecord::Schema[7.0].define(version: 2023_02_12_170429) do
   add_foreign_key "licenses", "clients"
   add_foreign_key "licenses", "customers"
   add_foreign_key "licenses", "payments"
+  add_foreign_key "links", "clients"
+  add_foreign_key "links", "payment_integrations"
   add_foreign_key "parameters_clients", "clients"
   add_foreign_key "parameters_clients", "parameters"
   add_foreign_key "payments", "payment_integrations"
