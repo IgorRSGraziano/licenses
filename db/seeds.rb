@@ -16,7 +16,7 @@ User.create username: 'adm', email: 'adm@adm.com', password: '123456', client_id
   Parameter.create_or_find_by(identifier: identifier, name: name)
 end
 
-PaymentIntegration.find_or_create_by(identifier: "HOTMART", name: "Asaas")
+PaymentIntegration.find_or_create_by(identifier: "HOTMART", name: "Hotmart")
 PaymentIntegration.find_or_create_by(identifier: "ASAAS", name: "Asaas")
 
 (1..20).each do |_|

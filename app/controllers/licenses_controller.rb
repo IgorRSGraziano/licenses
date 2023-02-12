@@ -8,7 +8,7 @@ class LicensesController < ApplicationController
   # GET /licenses or /licenses.json
   def index
     @licenses = License.left_joins(:payment).where('`key` LIKE ? AND client_id = ?', "%#{params[:q]}%", current_user.client.id).order(
-      params[:sort] ||= 'created_at DESC'
+      params[:sort] ||= 'licenses.created_at DESC'
     ).page(params[:page])
   end
 
