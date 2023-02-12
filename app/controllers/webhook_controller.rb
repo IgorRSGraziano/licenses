@@ -102,15 +102,44 @@ class WebhookController < ApplicationController
       return render json: { succes: false, message: 'Licença não gerada, pagamento recebido, licença foi gerada na confirmação' }
     end
     if paymentStatus.include? charge.event
-      if charge.payment.paymentLink
+      unless charge.payment.paymentLink
         return render json: { succes: false, message: 'Compra não foi gerado por link de pagamento' }
       end
-      if charge.payment.installments > 1
+      if charge.payment.installmentNumber > 1
         return render json: { succes: false, message: 'Pagamento parcelado, token gerado na primeira parcela.' }
       end
 
-    end
+      links = Link.where client_id: @client.id
 
+      unless links.any? { |l| URI(l.link).path.split('/').last == charge.payment.paymentLink }
+        return render json: { succes: false, message: 'Link de pagamento não configurado' }
+      end
+
+      asaas_service = Asaas.new(@client.param('ASAAS_AUTH_TOKEN').value(@client.id))
+      asaas_customer = asaas_service.get_customer charge.payment.customer
+      customer = Customer.new name: asaas_customer.name, email: asaas_customer.email, phone: asaas_customer.mobilePhone,
+                              external_id: asaas_customer.id
+      customer.save
+
+      paymentIntegration = PaymentIntegration.find_by identifier: 'ASAAS'
+
+      payment = Payment.new billing_type: charge.payment.billingType,
+                            # installment: charge.payment.installmentNumber,
+                            # value: req.data.purchase.price.value,
+                            # plan: req.data.subscription.plan.name,
+                            # external_id: req.data.purchase.transaction,
+                            payment_integration_id: paymentIntegration.id
+
+      license = License.new key: SecureRandom.uuid, status: :inactive, payment_id: payment.id,
+                            customer_id: customer.id, client_id: @client.id
+      license.save
+      LicenseMailer.send_license(to: customer.email, license: license, client: @client).deliver_now
+
+      return render json: { sucess: true, message: "Gerado chave #{license.key} para o cliente #{customer.email}" },
+                    status: :ok
+    end
+  rescue => e
+    render json: { sucess: false, message: e.message, stacktrace: e.backtrace }, status: :internal_server_error
   end
 
   private

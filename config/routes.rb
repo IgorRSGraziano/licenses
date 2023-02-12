@@ -26,4 +26,5 @@ Rails.application.routes.draw do
   put 'account', to: 'user#update', as: 'user'
 
   post 'webhook/hotmart/:client_token', to: 'webhook#hotmart', as: 'webhook_hotmart'
+  post 'webhook/asaas/:client_token', to: 'webhook#asaas', as: 'webhook_asaas'
 end
