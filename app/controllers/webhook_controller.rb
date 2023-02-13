@@ -101,6 +101,9 @@ class WebhookController < ApplicationController
     if charge.event == 'PAYMENT_RECEIVED' && charge.payment.billingType == 'CREDIT_CARD'
       return render json: { succes: false, message: 'Licença não gerada, pagamento recebido, licença foi gerada na confirmação' }
     end
+
+    asaas_service = Asaas.new(@client.param('ASAAS_AUTH_TOKEN').value(@client.id))
+
     if paymentStatus.include? charge.event
       unless charge.payment.paymentLink
         return render json: { succes: false, message: 'Compra não foi gerado por link de pagamento' }
@@ -115,7 +118,6 @@ class WebhookController < ApplicationController
         return render json: { succes: false, message: 'Link de pagamento não configurado' }
       end
 
-      asaas_service = Asaas.new(@client.param('ASAAS_AUTH_TOKEN').value(@client.id))
       asaas_customer = asaas_service.get_customer charge.payment.customer
       customer = Customer.new name: asaas_customer.name, email: asaas_customer.email, phone: asaas_customer.mobilePhone,
                               external_id: asaas_customer.id
@@ -127,7 +129,7 @@ class WebhookController < ApplicationController
                             # installment: charge.payment.installmentNumber,
                             # value: req.data.purchase.price.value,
                             # plan: req.data.subscription.plan.name,
-                            # external_id: req.data.purchase.transaction,
+                            external_id: charge.payment.id,
                             payment_integration_id: paymentIntegration.id
 
       license = License.new key: SecureRandom.uuid, status: :inactive, payment_id: payment.id,
@@ -137,7 +139,19 @@ class WebhookController < ApplicationController
 
       return render json: { sucess: true, message: "Gerado chave #{license.key} para o cliente #{customer.email}" },
                     status: :ok
+    elsif nonPaymentStatus.include? charge.event
+      license = Payment.find_by(external_id: charge.payment.id).license
+      customer = license.customer
+      license.update status: :suspended
+
+      LicenseMailer.cancel_license(to: customer.email, license: license, brand: @client.brand).deliver_now!
+
+      return render json: { sucess: true,
+                            message: "Licença #{license.key} cancelada para o cliente #{customer.email}" }
     end
+
+    render json: { sucess: false, message: "Evento não configurado" },
+           status: :ok
   rescue => e
     render json: { sucess: false, message: e.message, stacktrace: e.backtrace }, status: :internal_server_error
   end
