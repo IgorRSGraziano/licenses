@@ -12,7 +12,7 @@ class Asaas
   end
 
   def initialize(token)
-    @host = if Rails.env.production?
+    @host = if Rails.env.production? || true
               'https://www.asaas.com/api/v3'
             else
               'https://sandbox.asaas.com/api/v3'

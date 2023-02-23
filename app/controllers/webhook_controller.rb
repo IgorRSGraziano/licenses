@@ -45,7 +45,7 @@ class WebhookController < ApplicationController
       end
       email = req.data.buyer.email
 
-      customer = Customer.new email: email
+      customer = Customer.new email: email, client_id: @client.id
       customer.save
 
       paymentIntegration = PaymentIntegration.find_by identifier: 'HOTMART'
@@ -120,7 +120,7 @@ class WebhookController < ApplicationController
 
       asaas_customer = asaas_service.get_customer charge.payment.customer
       customer = Customer.new name: asaas_customer.name, email: asaas_customer.email, phone: asaas_customer.mobilePhone,
-                              external_id: asaas_customer.id
+                              external_id: asaas_customer.id, client_id: @client.id
       customer.save
 
       paymentIntegration = PaymentIntegration.find_by identifier: 'ASAAS'
