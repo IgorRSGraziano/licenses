@@ -111,12 +111,12 @@ class WebhookController < ApplicationController
       if charge.payment.installmentNumber > 1
         return render json: { succes: false, message: 'Pagamento parcelado, token gerado na primeira parcela.' }
       end
-
-      links = Link.where client_id: @client.id
-
-      unless links.any? { |l| URI(l.link).path.split('/').last == charge.payment.paymentLink }
-        return render json: { succes: false, message: 'Link de pagamento não configurado' }
-      end
+      
+      # links = Link.where client_id: @client.id
+      #
+      # unless links.any? { |l| URI(l.link).path.split('/').last == charge.payment.paymentLink }
+      #   return render json: { succes: false, message: 'Link de pagamento não configurado' }
+      # end
 
       asaas_customer = asaas_service.get_customer charge.payment.customer
       customer = Customer.new name: asaas_customer.name, email: asaas_customer.email, phone: asaas_customer.mobilePhone,
