@@ -1,7 +1,9 @@
 <div class="mx-auto md:w-2/3 w-full">
-  <h1 >New parameter</h1>
+  <h1>Novo parâmetro</h1>
+  <span class="block bg-slate-200 px-4 py-1 mb-7 text-xs rounded my-2 w-fit"><%= fa_icon('info-circle', class: 'text-slate-500 pr-3') %>
+    São dados adicionais que são informados em todos os whitelabel, ao cadastrar um, você poderá informar ele na criação/edição de um whitelabel</span>
 
   <%= render "form", parameter: @parameter %>
 
-  <%= link_to 'Back to parameters', parameters_path, class: "ml-2 rounded-lg py-3 px-5 bg-gray-100 inline-block font-medium" %>
+  <%= link_to 'Voltar para parâmetros', parameters_path, class: "ml-2 rounded-lg py-3 px-5 bg-gray-100 inline-block font-medium" %>
 </div>

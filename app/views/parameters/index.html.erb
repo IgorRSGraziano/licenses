@@ -1,8 +1,10 @@
 <div class="w-full">
   <div class="flex justify-between items-center">
-    <h1 >Parameters</h1>
-    <%= link_to 'New parameter', new_parameter_path, class: "button" %>
+    <h1>Parâmetros</h1>
+    <%= link_to 'Novo parâmetro', new_parameter_path, class: "button" %>
   </div>
+  <span class="block bg-slate-200 px-4 py-1 mb-7 text-xs rounded my-2 w-fit"><%= fa_icon('info-circle', class: 'text-slate-500 pr-3') %>
+    São dados adicionais que são informados em todos os whitelabel, ao cadastrar um, você poderá informar ele na criação/edição de um whitelabel</span>
 
   <div id="parameters" class="min-w-full">
     <%= render @parameters %>

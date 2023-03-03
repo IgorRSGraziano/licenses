@@ -1,4 +1,7 @@
-<h1>Parameters</h1>
+<div class="flex mt-10 items-center justify-between">
+  <h1>Parâmetros</h1>
+  <%= link_to "Quer cadastrar um novo?", new_parameter_path, class: 'button' %>
+</div>
 <% client ||= current_user.client %>
 <% parameters.each do |param| %>
   <div class="my-5">

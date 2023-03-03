@@ -1,22 +1,16 @@
 <div id="<%= dom_id parameter %>">
   <p class="my-5">
-    <strong class="block font-medium mb-1">Identifier:</strong>
-    <%= parameter.identifier %>
-  </p>
-
-  <p class="my-5">
-    <strong class="block font-medium mb-1">Name:</strong>
+    <strong class="block font-medium mb-1">Nome:</strong>
     <%= parameter.name %>
   </p>
 
   <p class="my-5">
-    <strong class="block font-medium mb-1">Description:</strong>
+    <strong class="block font-medium mb-1">Descrição:</strong>
     <%= parameter.description %>
   </p>
 
   <% if action_name != "show" %>
-    <%= link_to "Show this parameter", parameter, class: "rounded-lg py-3 px-5 bg-gray-100 inline-block font-medium" %>
-    <%= link_to 'Edit this parameter', edit_parameter_path(parameter), class: "rounded-lg py-3 ml-2 px-5 bg-gray-100 inline-block font-medium" %>
+    <%= link_to 'Visualizar/Editar', edit_parameter_path(parameter), class: "rounded-lg py-3 ml-2 px-5 bg-gray-100 inline-block font-medium" %>
     <hr class="mt-6">
   <% end %>
 </div>
