@@ -1,10 +1,11 @@
-<h1>Import licenses</h1>
+<h1>Importar licenças</h1>
 <br>
 <div>
-  <%= form_with action_name: licenses_import_path do |form| %>
-    <%= form.label :licenses, 'Separate licenses by ";"', class: 'block' %>
-    <%= form.text_area :licenses, placeholder: 'license1;license2;license3', class: 'block my-7' %>
-    <%= form.submit 'Save', class: 'button' %>
+  <%= form_with class: "max-w-[390px]", action_name: licenses_import_path do |form| %>
+    <%= form.label :licenses, 'Escreva as licenças separadas por ";"', class: 'block' %>
+    <%= form.text_area :licenses, placeholder: 'licensa1;licenca2;licenca3', class: 'block w-full my-7' %>
+    <%= form.select :client_id, @clients_options, { include_blank: 'Selecione whitelabel' }, class: "mb-7", data: { 'tom-select' => true } %>
+    <%= form.submit 'Gerar', class: 'button' %>
   <% end %>
-  <%= link_to 'Back to licenses', licenses_path %>
+  <%= link_to 'Voltar para licenças', licenses_path %>
 </div>

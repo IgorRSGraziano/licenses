@@ -62,7 +62,7 @@ class WebhookController < ApplicationController
       license = License.new key: SecureRandom.uuid, status: :inactive, payment_id: payment.id,
                             customer_id: customer.id, client_id: @client.id
       license.save
-      LicenseMailer.send_license(to: email, license: license, client: @client).deliver_now
+      LicenseMailer.send_license(to: email, license: license, client: @client).deliver_now!
 
       return render json: { sucess: true, message: "Gerado chave #{license.key} para o cliente #{req.data.buyer.email}" },
                     status: :ok
@@ -135,7 +135,7 @@ class WebhookController < ApplicationController
       license = License.new key: SecureRandom.uuid, status: :inactive, payment_id: payment.id,
                             customer_id: customer.id, client_id: @client.id
       license.save
-      LicenseMailer.send_license(to: customer.email, license: license, client: @client).deliver_now
+      LicenseMailer.send_license(to: customer.email, license: license, client: @client).deliver_now!
 
       return render json: { sucess: true, message: "Gerado chave #{license.key} para o cliente #{customer.email}" },
                     status: :ok

@@ -2,12 +2,13 @@ class LicensesController < ApplicationController
   before_action :set_license, only: %i[show edit update destroy change_status]
   before_action :set_license_key, only: %i[activate]
   skip_before_action :authorized, only: %i[activate status inactivate]
-  skip_before_action :verify_authenticity_token, only: %i[activate status inactivate]
+  skip_before_action :verify_authenticity_token, only: %i[activate status inactivate create]
   before_action :admin_action, except: %i[index activate inactivate status]
 
   # GET /licenses or /licenses.json
   def index
-    @licenses = License.left_joins(:payment).where('`key` LIKE ? AND client_id = ?', "%#{params[:q]}%", current_user.client.id).order(
+    @clients_options = Client.pluck(:brand, :id);
+    @licenses = License.left_joins(:payment).where('`key` LIKE ?', "%#{params[:q]}%").order(
       params[:sort] ||= 'licenses.created_at DESC'
     ).page(params[:page])
   end
@@ -26,14 +27,16 @@ class LicensesController < ApplicationController
   end
 
   # GET /licenses/import
-  def import; end
+  def import
+    @clients_options = Client.all.pluck :brand, :id
+  end
 
   # POST /licenses/import
   def import_create
     data = params[:licenses]
     licenses = data.split(';')
     licenses.each do |license|
-      License.create key: license.strip, status: :inactive, client_id: current_user.client.id
+      License.create key: license.strip, status: :inactive, client_id: params[:client_id]
     end
 
     redirect_to licenses_import_path, notice: 'Licenses were successfully imported.'
@@ -43,11 +46,7 @@ class LicensesController < ApplicationController
   def create
     data = request.body.read.blank? ? nil : JSON.parse(request.body.read, object_class: OpenStruct)
 
-    @license = if data&.key.nil?
-                 License.new key: SecureRandom.uuid, status: :inactive, client_id: current_user.client.id
-               else
-                 License.new license_params
-               end
+    @license = License.new key: SecureRandom.uuid, status: :inactive, client_id: data.whitelabel
 
     respond_to do |format|
       if @license.save
