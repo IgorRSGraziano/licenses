@@ -12,7 +12,7 @@
   <% end %>
 
   <div class="my-5">
-    <%= form.label :brand %>
+    <%= form.label :brand, "Nome" %>
     <%= form.text_field :brand, class: "block shadow rounded-md border border-gray-200 outline-none px-3 py-2 mt-2 w-full" %>
   </div>
 
@@ -35,7 +35,7 @@
     <% end %>
   <% end %>
 
-  <%= render 'clients/parameters', parameters: @parameters, form: form, client: @client  %>
+  <%= render 'clients/parameters', parameters: @parameters, form: form, client: @client %>
 
   <div class="inline">
     <%= form.submit "Create whitelabel", class: "button" %>
