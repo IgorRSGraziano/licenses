@@ -78,7 +78,7 @@
 <%=
   #TODO Remover isso e passar para o turbo
 %>
-<script>
+<script type="module">
     async function updateStatus(id) {
         const data = new FormData()
         data.append("id", id)
@@ -118,4 +118,7 @@
     }
 
     document.querySelector("[data-modal]")?.addEventListener("click", verifyClick)
+
+    window.showModal = showModal;
+    window.generateLicense = generateLicense;
 </script>

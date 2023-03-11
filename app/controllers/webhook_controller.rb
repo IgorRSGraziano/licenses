@@ -44,10 +44,12 @@ class WebhookController < ApplicationController
       #                 status: :ok
       # end
       email = req.data.buyer.email
+      name = req.data.buyer.name
+      phone = req.data.buyer.checkout_phone
 
       license = nil
       ActiveRecord::Base.transaction do
-        customer = Customer.new email: email, client_id: @client.id
+        customer = Customer.new email: email, client_id: @client.id, phone: phone, name: name
         customer.save!
 
         paymentIntegration = PaymentIntegration.find_by identifier: 'HOTMART'
