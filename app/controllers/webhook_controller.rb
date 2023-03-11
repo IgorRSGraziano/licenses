@@ -39,10 +39,10 @@ class WebhookController < ApplicationController
     # TODO: Passar responsabilidade para o model
     if buy_events.include?(req.event)
       installment = req.data.purchase.payment.installments_number
-      if installment > 1
-        return render json: { sucess: false, message: "Token já gerado na primeira parcela. Parcela: #{installment}" },
-                      status: :ok
-      end
+      # if installment > 1
+      #   return render json: { sucess: false, message: "Token já gerado na primeira parcela. Parcela: #{installment}" },
+      #                 status: :ok
+      # end
       email = req.data.buyer.email
 
       license = nil
