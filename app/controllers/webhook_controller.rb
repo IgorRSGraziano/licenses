@@ -9,7 +9,7 @@ class WebhookController < ApplicationController
                     status: :forbidden
     end
 
-    if request.headers['X-HOTMART-HOTTOK'] != @client.param('HOTTOK').value(@client.id)
+    if request.headers['X-HOTMART-HOTTOK'] != @client.param('HOTTOK').value(@client.id) && Rails.env.production?
       return render json: { sucess: false, message: 'Token inválido' },
                     status: :forbidden
     end
@@ -45,29 +45,32 @@ class WebhookController < ApplicationController
       end
       email = req.data.buyer.email
 
-      customer = Customer.new email: email, client_id: @client.id
-      customer.save
+      license = nil
+      ActiveRecord::Base.transaction do
+        customer = Customer.new email: email, client_id: @client.id
+        customer.save!
 
-      paymentIntegration = PaymentIntegration.find_by identifier: 'HOTMART'
+        paymentIntegration = PaymentIntegration.find_by identifier: 'HOTMART'
 
-      payment = Payment.new billing_type: req.data.purchase.payment.type,
-                            installment: installment,
-                            value: req.data.purchase.price.value,
-                            plan: req.data.subscription.plan.name,
-                            external_id: req.data.purchase.transaction,
-                            payment_integration_id: paymentIntegration.id
+        payment = Payment.new billing_type: req.data.purchase.payment.type,
+                              installment: installment,
+                              value: req.data.purchase.price.value,
+                              plan: req.data.subscription.plan.name,
+                              external_id: req.data.purchase.transaction,
+                              payment_integration_id: paymentIntegration.id
 
-      payment.save
+        payment.save!
 
-      license = License.new key: SecureRandom.uuid, status: :inactive, payment_id: payment.id,
-                            customer_id: customer.id, client_id: @client.id
-      license.save
-      LicenseMailer.send_license(to: email, license: license, client: @client).deliver_now!
+        license = License.new key: SecureRandom.uuid, status: :inactive, payment_id: payment.id,
+                              customer_id: customer.id, client_id: @client.id
+        license.save!
+        LicenseMailer.send_license(to: email, license: license, client: @client).deliver_now!
+      end
 
       return render json: { sucess: true, message: "Gerado chave #{license.key} para o cliente #{req.data.buyer.email}" },
                     status: :ok
     elsif cancel_events.include?(req.event)
-      license = Payment.find_by(external_id: req.data.purchase.transaction).license
+      license = Payment.find_by(external_id: req.data.subscription.transaction).license
       license.status = :suspended
       license.save
       LicenseMailer.cancel_license(to: req.data.buyer.email, license: license, brand: @client.brand).deliver_now!
@@ -111,31 +114,34 @@ class WebhookController < ApplicationController
       if charge.payment.installmentNumber > 1
         return render json: { succes: false, message: 'Pagamento parcelado, token gerado na primeira parcela.' }
       end
-      
+
       # links = Link.where client_id: @client.id
       #
       # unless links.any? { |l| URI(l.link).path.split('/').last == charge.payment.paymentLink }
       #   return render json: { succes: false, message: 'Link de pagamento não configurado' }
       # end
 
+      license = nil
       asaas_customer = asaas_service.get_customer charge.payment.customer
-      customer = Customer.new name: asaas_customer.name, email: asaas_customer.email, phone: asaas_customer.mobilePhone,
-                              external_id: asaas_customer.id, client_id: @client.id
-      customer.save
+      ActiveRecord::Base.transaction do
+        customer = Customer.new name: asaas_customer.name, email: asaas_customer.email, phone: asaas_customer.mobilePhone,
+                                external_id: asaas_customer.id, client_id: @client.id
+        customer.save
 
-      paymentIntegration = PaymentIntegration.find_by identifier: 'ASAAS'
+        paymentIntegration = PaymentIntegration.find_by identifier: 'ASAAS'
 
-      payment = Payment.new billing_type: charge.payment.billingType,
-                            # installment: charge.payment.installmentNumber,
-                            # value: req.data.purchase.price.value,
-                            # plan: req.data.subscription.plan.name,
-                            external_id: charge.payment.id,
-                            payment_integration_id: paymentIntegration.id
+        payment = Payment.new billing_type: charge.payment.billingType,
+                              # installment: charge.payment.installmentNumber,
+                              # value: req.data.purchase.price.value,
+                              # plan: req.data.subscription.plan.name,
+                              external_id: charge.payment.id,
+                              payment_integration_id: paymentIntegration.id
 
-      license = License.new key: SecureRandom.uuid, status: :inactive, payment_id: payment.id,
-                            customer_id: customer.id, client_id: @client.id
-      license.save
-      LicenseMailer.send_license(to: customer.email, license: license, client: @client).deliver_now!
+        license = License.new key: SecureRandom.uuid, status: :inactive, payment_id: payment.id,
+                              customer_id: customer.id, client_id: @client.id
+        license.save
+        LicenseMailer.send_license(to: customer.email, license: license, client: @client).deliver_now!
+      end
 
       return render json: { sucess: true, message: "Gerado chave #{license.key} para o cliente #{customer.email}" },
                     status: :ok
