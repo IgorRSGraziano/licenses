@@ -33,7 +33,7 @@ class ClientsController < ApplicationController
     respond_to do |format|
       if @client.save
         ParametersHelper.update_by_client @client.id, params[:client]
-        format.html { redirect_to client_url(@client), notice: 'Client was successfully created.' }
+        format.html { redirect_to edit_client_url(@client), notice: 'Client was successfully created.' }
         format.json { render :show, status: :created, location: @client }
       else
         format.html { render :new, status: :unprocessable_entity }
@@ -46,8 +46,8 @@ class ClientsController < ApplicationController
   def update
     respond_to do |format|
       if @client.update(client_params)
-        ParametersHelper.update_by_client params[:id], params
-        format.html { redirect_to client_url(@client), notice: 'Client was successfully updated.' }
+        ParametersHelper.update_by_client @client.id, params[:client]
+        format.html { redirect_to edit_client_url(@client), notice: 'Client was successfully updated.' }
         format.json { render :show, status: :ok, location: @client }
       else
         format.html { render :edit, status: :unprocessable_entity }
