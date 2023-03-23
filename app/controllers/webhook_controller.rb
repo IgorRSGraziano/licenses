@@ -26,7 +26,7 @@ class WebhookController < ApplicationController
                PURCHASE_EXPIRED: 7,
                PURCHASE_DELAYED: 8 }
 
-    buy_events = [events[:PURCHASE_COMPLETE], events[:PURCHASE_APPROVED]]
+    buy_events = [events[:PURCHASE_APPROVED]]
     cancel_events = [events[:PURCHASE_CANCELED],
                      events[:PURCHASE_PROTEST],
                      events[:PURCHASE_REFUNDED],
