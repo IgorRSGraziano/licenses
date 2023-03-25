@@ -58,7 +58,7 @@ class WebhookController < ApplicationController
                               installment: installment,
                               value: req.data.purchase.price.value,
                               plan: req.data.subscription.plan.name,
-                              external_id: req.data.purchase.transaction,
+                              external_id: req.data.subscription.subscriber.code,
                               payment_integration_id: paymentIntegration.id
 
         payment.save!
@@ -72,7 +72,7 @@ class WebhookController < ApplicationController
       return render json: { sucess: true, message: "Gerado chave #{license.key} para o cliente #{req.data.buyer.email}" },
                     status: :ok
     elsif cancel_events.include?(req.event)
-      license = Payment.find_by(external_id: req.data.subscription.transaction).license
+      license = Payment.find_by(external_id: req.data.subscription.subscriber.code).license
       license.status = :suspended
       license.save
       LicenseMailer.cancel_license(to: req.data.buyer.email, license: license, brand: @client.brand).deliver_now!
@@ -136,7 +136,7 @@ class WebhookController < ApplicationController
                               # installment: charge.payment.installmentNumber,
                               # value: req.data.purchase.price.value,
                               # plan: req.data.subscription.plan.name,
-                              external_id: charge.payment.id,
+                              external_id: charge.payment.subscription,
                               payment_integration_id: paymentIntegration.id
 
         license = License.new key: SecureRandom.uuid, status: :inactive, payment_id: payment.id,
@@ -148,7 +148,7 @@ class WebhookController < ApplicationController
       return render json: { sucess: true, message: "Gerado chave #{license.key} para o cliente #{customer.email}" },
                     status: :ok
     elsif nonPaymentStatus.include? charge.event
-      license = Payment.find_by(external_id: charge.payment.id).license
+      license = Payment.find_by(external_id: charge.payment.subscription).license
       customer = license.customer
       license.update status: :suspended
 
