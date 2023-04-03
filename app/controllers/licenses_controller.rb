@@ -94,7 +94,7 @@ class LicensesController < ApplicationController
 
   # GET /license/status/:key
   def status
-    license = from_token(params[:key])
+    license = from_token(params[:key]) || License.find_by(key: params[:key])
     return render json: { active: false, message: 'Licença não encontrada.' }, status: :ok if license.nil?
     return render json: { active: false, message: 'Licença expirada!' }, status: :ok unless license.active?
 
