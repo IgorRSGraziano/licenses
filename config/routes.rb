@@ -16,6 +16,7 @@ Rails.application.routes.draw do
   put 'licenses/change_status', to: 'licenses#change_status'
   put 'licenses/activate', to: 'licenses#activate'
   put 'licenses/inactivate', to: 'licenses#inactivate'
+  get 'licenses/inactivate', to: 'licenses#inactivate'
   get 'licenses/status', to: 'licenses#status'
   resources :licenses
 

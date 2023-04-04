@@ -80,10 +80,15 @@ class LicensesController < ApplicationController
     render json: { succes: 'true', message: 'Licença ativada com sucesso!', token: }, status: :ok
   end
 
-  # PUT /licenses/inactivate
+  # PUT | GET /licenses/inactivate
   def inactivate
     data = request.body.read.blank? ? nil : JSON.parse(request.body.read, object_class: OpenStruct)
-    license = from_token(data[:token])
+    token = data.nil? ? params[:token] : data[:token]
+    license = from_token(token)
+    redirectUri = params[:redirect]
+    redirectUri = redirectUri.nil? ? nil : "https://#{redirectUri}" if redirectUri && !redirectUri.start_with?('http')
+
+    return redirect_to redirectUri, allow_other_host: true unless redirectUri.nil?
     return render json: { succes: false, message: 'Licença não encontrada.' }, status: :ok if license.nil?
     return render json: { succes: false, message: 'Licença expirada!' }, status: :ok unless license.active?
 
