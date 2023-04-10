@@ -20,11 +20,17 @@
     <%= form.label :description %>
     <%= form.text_field :description, class: "block shadow rounded-md border border-gray-200 outline-none px-3 py-2 mt-2 w-full" %>
   </div>
-  <h1>Links webhooks</h1>
-  <div class="my-5">
-    <p class="mb-10">Hotmart: <%= webhook_hotmart_url client.token %>  <span onclick="copyToClipboard(`<%= webhook_hotmart_url client.token %>`)" class="ml-3 button"><%= fa_icon "copy" %></span></p>
-    <p>Asaas: <%= webhook_asaas_url client.token %>  <span onclick="copyToClipboard(`<%= webhook_hotmart_url client.token %>`)" class="ml-3 button"><%= fa_icon "copy" %></span></p>
-  </div>
+  <% unless action_name == 'new' %>
+    <h1>Links webhooks</h1>
+    <div class="my-5">
+      <p class="mb-10">Hotmart: <%= webhook_hotmart_url client.token %>
+        <span onclick="copyToClipboard(`<%= webhook_hotmart_url client.token %>`)" class="ml-3 button"><%= fa_icon "copy" %></span>
+      </p>
+      <p>Asaas: <%= webhook_asaas_url client.token %>
+        <span onclick="copyToClipboard(`<%= webhook_asaas_url client.token %>`)" class="ml-3 button"><%= fa_icon "copy" %></span>
+      </p>
+    </div>
+  <% end %>
   <%= render 'clients/parameters', parameters: @parameters, form: form, client: @client %>
 
   <div class="inline">
@@ -33,8 +39,8 @@
 <% end %>
 
 <script>
-  const copyToClipboard = str => {
-      navigator.clipboard.writeText(str)
-      alert("Copiado para área de transferência")
-  };
+    const copyToClipboard = str => {
+        navigator.clipboard.writeText(str)
+        alert("Copiado para área de transferência")
+    };
 </script>
