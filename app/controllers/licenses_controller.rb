@@ -1,6 +1,7 @@
 class LicensesController < ApplicationController
   before_action :set_license, only: %i[show edit update destroy change_status]
   before_action :set_license_key, only: %i[activate]
+  before_action :set_license_client, only: %i[status]
   skip_before_action :authorized, only: %i[activate status inactivate]
   skip_before_action :verify_authenticity_token, only: %i[activate status inactivate create]
   before_action :admin_action, except: %i[index activate inactivate status]
@@ -84,7 +85,12 @@ class LicensesController < ApplicationController
   def inactivate
     data = request.body.read.blank? ? nil : JSON.parse(request.body.read, object_class: OpenStruct)
     token = data.nil? ? params[:token] : data[:token]
-    license = from_token(token)
+    authorization = request.headers['Authorization']&.split(' ')&.last || params[:authorization]
+
+    @client = Client.find_by(token: authorization)
+
+    license = from_token(token, client_id: @client&.id)
+
     redirectUri = params[:redirect]
     redirectUri = redirectUri.nil? ? nil : "https://#{redirectUri}" if redirectUri && !redirectUri.start_with?('http')
 
@@ -136,9 +142,26 @@ class LicensesController < ApplicationController
     @license = License.find(params[:id])
   end
 
+  def set_license_client
+    token = request.headers['Authorization'].split(' ').last
+    @client = Client.find_by(token:)
+    # @license = License.find_by(key: params[:key], client_id: @client.id)
+    @license = if token.nil?
+                 License.find_by(key: params[:key])
+               else
+                 License.find_by(key: params[:key], client_id: @client&.id)
+               end
+  end
+
   def set_license_key
+    token = request.headers['Authorization'].split(' ').last
+    @client = Client.find_by(token:)
     data = request.body.read.blank? ? nil : JSON.parse(request.body.read, object_class: OpenStruct)
-    @license = License.find_by(key: data[:key])
+    @license = if token.nil?
+                 License.find_by(key: data[:key])
+               else
+                 License.find_by(key: data[:key], client_id: @client&.id)
+               end
   end
 
   # Only allow a list of trusted parameters through.
@@ -147,11 +170,15 @@ class LicensesController < ApplicationController
   end
 
   # TODO: Passar isso para o Model
-  def from_token(token)
+  def from_token(token, client_id: nil)
     token = token.gsub ' ', '+'
     crypt = ActiveSupport::MessageEncryptor.new(ENV['CRYPT_KEY'])
     key = crypt.decrypt_and_verify(token)
-    License.find_by(key: key)
+    if client_id.nil?
+      License.find_by(key: key)
+    else
+      License.find_by(key: key, client_id: client_id)
+    end
   rescue
     nil
   end
