@@ -87,7 +87,7 @@ class LicensesController < ApplicationController
     token = data.nil? ? params[:token] : data[:token]
     authorization = request.headers['Authorization']&.split(' ')&.last || params[:authorization]
 
-    @client = Client.find_by(token: authorization)
+    @client = Client.find_by(token: authorization) unless authorization.nil?
 
     license = from_token(token, client_id: @client&.id)
 
@@ -143,7 +143,7 @@ class LicensesController < ApplicationController
   end
 
   def set_license_client
-    token = request.headers['Authorization'].split(' ').last
+    token = request.headers['Authorization']&.split(' ')&.last
     @client = Client.find_by(token:)
     # @license = License.find_by(key: params[:key], client_id: @client.id)
     @license = if token.nil?
@@ -154,7 +154,7 @@ class LicensesController < ApplicationController
   end
 
   def set_license_key
-    token = request.headers['Authorization'].split(' ').last
+    token = request.headers['Authorization']&.split(' ')&.last
     @client = Client.find_by(token:)
     data = request.body.read.blank? ? nil : JSON.parse(request.body.read, object_class: OpenStruct)
     @license = if token.nil?
