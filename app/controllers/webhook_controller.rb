@@ -113,7 +113,7 @@ class WebhookController < ApplicationController
       unless charge.payment.paymentLink
         return render json: { succes: false, message: 'Compra não foi gerado por link de pagamento' }
       end
-      if charge.payment.installmentNumber > 1
+      if !charge.payment.installmentNumber.nil? && charge.payment.installmentNumber > 1
         return render json: { succes: false, message: 'Pagamento parcelado, token gerado na primeira parcela.' }
       end
 
@@ -142,7 +142,7 @@ class WebhookController < ApplicationController
         license = License.new key: SecureRandom.uuid, status: :inactive, payment_id: payment.id,
                               customer_id: customer.id, client_id: @client.id
         license.save
-        LicenseMailer.send_license(to: customer.email, license: license, client: @client).deliver_now!
+        # LicenseMailer.send_license(to: customer.email, license: license, client: @client).deliver_now!
       end
 
       return render json: { sucess: true, message: "Gerado chave #{license.key} para o cliente #{customer.email}" },
@@ -152,7 +152,7 @@ class WebhookController < ApplicationController
       customer = license.customer
       license.update status: :suspended
 
-      LicenseMailer.cancel_license(to: customer.email, license: license, brand: @client.brand).deliver_now!
+      # LicenseMailer.cancel_license(to: customer.email, license: license, brand: @client.brand).deliver_now!
 
       return render json: { sucess: true,
                             message: "Licença #{license.key} cancelada para o cliente #{customer.email}" }
