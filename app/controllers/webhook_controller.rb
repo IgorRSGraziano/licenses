@@ -104,7 +104,8 @@ class WebhookController < ApplicationController
     paymentStatus = %w[PAYMENT_CONFIRMED PAYMENT_RECEIVED]
 
     if charge.event == 'PAYMENT_RECEIVED' && charge.payment.billingType == 'CREDIT_CARD'
-      return render json: { succes: false, message: 'Licença não gerada, pagamento recebido, licença foi gerada na confirmação' }
+      return render json: { succes: false,
+                            message: 'Licença não gerada, pagamento recebido, licença foi gerada na confirmação' }
     end
 
     asaas_service = Asaas.new(@client.param('ASAAS_AUTH_TOKEN').value(@client.id))
@@ -140,6 +141,8 @@ class WebhookController < ApplicationController
                               external_id: charge.payment.subscription,
                               payment_integration_id: paymentIntegration.id
 
+        payment.save
+
         license = License.new key: SecureRandom.uuid, status: :inactive, payment_id: payment.id,
                               customer_id: customer.id, client_id: @client.id
         license.save
@@ -149,7 +152,14 @@ class WebhookController < ApplicationController
       return render json: { sucess: true, message: "Gerado chave #{license.key} para o cliente #{customer&.email}" },
                     status: :ok
     elsif nonPaymentStatus.include? charge.event
-      license = Payment.find_by(external_id: charge.payment.subscription).license
+      license = Payment.find_by(external_id: charge.payment.subscription)&.license
+
+      if license.nil?
+        Wpp.send_message ENV['NOTIFY_NUMBER'], "Licença não encontrada para o cliente #{charge.payment.customer}"
+        return render json: { sucess: false,
+                              message: "Licença não encontrada para o cliente #{charge.payment.customer}" }
+      end
+
       customer = license.customer
       license.update status: :suspended
 
