@@ -96,7 +96,7 @@ class WebhookController < ApplicationController
     end
     charge = JSON.parse(request.body.read, object_class: OpenStruct)
     # TODO: Criar parametro de asaas acces token
-    if request.headers['asaas-access-token'] != @client.param('ASAAS_ACCESS_TOKEN')&.value(@client.id) || !@client.param('ASAAS_ACCESS_TOKEN')&.value(@client.id).nil?
+    if request.headers['asaas-access-token'] != @client.param('ASAAS_ACCESS_TOKEN')&.value(@client.id) && @client.param('ASAAS_ACCESS_TOKEN')&.value(@client.id).nil?
       return render json: { sucess: false, message: 'Token inválido' },
                     status: :forbidden
     end
