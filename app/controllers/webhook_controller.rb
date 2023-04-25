@@ -125,6 +125,7 @@ class WebhookController < ApplicationController
 
       license = nil
       asaas_customer = asaas_service.get_customer charge.payment.customer
+      customer = nil
       ActiveRecord::Base.transaction do
         customer = Customer.new name: asaas_customer.name, email: asaas_customer.email, phone: asaas_customer.mobilePhone,
                                 external_id: asaas_customer.id, client_id: @client.id
@@ -145,7 +146,7 @@ class WebhookController < ApplicationController
         # LicenseMailer.send_license(to: customer.email, license: license, client: @client).deliver_now!
       end
 
-      return render json: { sucess: true, message: "Gerado chave #{license.key} para o cliente #{customer.email}" },
+      return render json: { sucess: true, message: "Gerado chave #{license.key} para o cliente #{customer&.email}" },
                     status: :ok
     elsif nonPaymentStatus.include? charge.event
       license = Payment.find_by(external_id: charge.payment.subscription).license
