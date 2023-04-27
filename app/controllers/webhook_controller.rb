@@ -146,6 +146,9 @@ class WebhookController < ApplicationController
         license = License.new key: SecureRandom.uuid, status: :inactive, payment_id: payment.id,
                               customer_id: customer.id, client_id: @client.id
         license.save
+
+        asaas_service.change_customer_description customer.external_id, "Chave #{@client.brand} -> #{license.key}"
+
         LicenseMailer.send_license(to: customer.email, license: license, client: @client).deliver_now!
       end
 
