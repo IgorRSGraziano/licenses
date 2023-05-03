@@ -1,11 +1,19 @@
 <div id="<%= dom_id license %>">
   <p class="my-5">
-    <strong class="block font-medium mb-1">Key:</strong>
+    <strong class="block font-medium mb-1">Chave:</strong>
     <%= license.key %>
   </p>
 
   <p class="my-5">
     <strong class="block font-medium mb-1">Status:</strong>
     <%= license.status %>
+  </p>
+  <p class="my-5">
+    <strong class="block font-medium mb-1">Cliente:</strong>
+    <%= license.customer&.name || license.customer&.email %>
+  </p>
+  <p class="my-5">
+    <strong class="block font-medium mb-1">Whitelabel:</strong>
+    <%= license.client.brand %>
   </p>
 </div>

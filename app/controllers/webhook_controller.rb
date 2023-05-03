@@ -114,7 +114,7 @@ class WebhookController < ApplicationController
       unless charge.payment.paymentLink
         return render json: { succes: false, message: 'Compra não foi gerado por link de pagamento' }
       end
-      if !charge.payment.installmentNumber.nil? && charge.payment.installmentNumber > 1
+    if !charge.payment.installmentNumber.nil? && charge.payment.installmentNumber > 1
         return render json: { succes: false, message: 'Pagamento parcelado, token gerado na primeira parcela.' }
       end
 
