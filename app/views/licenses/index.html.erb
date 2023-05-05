@@ -34,6 +34,10 @@
               <%= fa_icon(sort_arrow(request.original_url, search_text)) %>
               <%= text %>
             </a>
+            <label class="flex items-center px-2">
+              <%= fa_icon 'search', class: "text-slate-400" %>
+              <input type="text" class="m-auto border-t-0 border-x-0"/>
+            </label>
           </th>
         <% end %>
         <th class="border-b break-words font-medium text-center p-1 pt-6 py-3 text-slate-400 text-left">
