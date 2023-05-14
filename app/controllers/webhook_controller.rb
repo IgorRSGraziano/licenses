@@ -36,6 +36,9 @@ class WebhookController < ApplicationController
 
     req.event = events[req.event.to_sym]
 
+    token_watidy = @client.param('WATIDY_TOKEN').value(@client.id)
+    watidy = Watidy.new token_watidy
+
     # TODO: Passar responsabilidade para o model
     if buy_events.include?(req.event)
       installment = req.data.purchase.payment.installments_number
@@ -67,6 +70,10 @@ class WebhookController < ApplicationController
                               customer_id: customer.id, client_id: @client.id
         license.save!
         LicenseMailer.send_license(to: email, license: license, client: @client).deliver_now!
+        if token_watidy
+          watidy.send_message customer.phone,
+                              "Olá #{customer.name}, sua licença foi gerada com sucesso! Chave de ativação: #{license.key}"
+        end
       end
 
       return render json: { sucess: true, message: "Gerado chave #{license.key} para o cliente #{req.data.buyer.email}" },
@@ -76,6 +83,11 @@ class WebhookController < ApplicationController
       license.status = :suspended
       license.save
       LicenseMailer.cancel_license(to: req.data.buyer.email, license: license, brand: @client.brand).deliver_now!
+
+      if token_watidy
+        watidy.send_message license.customer.phone,
+                            "Olá #{license.customer.name}, sua licença #{license.client.brand} foi cancelada!"
+      end
 
       return render json: { sucess: true,
                             message: "Licença #{license.key} cancelada para o cliente #{req.data.buyer.email}" }
@@ -110,11 +122,14 @@ class WebhookController < ApplicationController
 
     asaas_service = Asaas.new(@client.param('ASAAS_AUTH_TOKEN').value(@client.id))
 
+    token_watidy = @client.param('WATIDY_TOKEN').value(@client.id)
+    watidy = Watidy.new token_watidy
+
     if paymentStatus.include? charge.event
       unless charge.payment.paymentLink
         return render json: { succes: false, message: 'Compra não foi gerado por link de pagamento' }
       end
-    if !charge.payment.installmentNumber.nil? && charge.payment.installmentNumber > 1
+      if !charge.payment.installmentNumber.nil? && charge.payment.installmentNumber > 1
         return render json: { succes: false, message: 'Pagamento parcelado, token gerado na primeira parcela.' }
       end
 
@@ -150,6 +165,11 @@ class WebhookController < ApplicationController
         asaas_service.change_customer_description customer.external_id, "Chave #{@client.brand} -> #{license.key}"
 
         LicenseMailer.send_license(to: customer.email, license: license, client: @client).deliver_now!
+
+        if token_watidy
+          watidy.send_message customer.phone,
+                              "Olá #{customer.name}, sua licença foi gerada com sucesso! Chave de ativação: #{license.key}"
+        end
       end
 
       return render json: { sucess: true, message: "Gerado chave #{license.key} para o cliente #{customer&.email}" },
@@ -167,6 +187,11 @@ class WebhookController < ApplicationController
       license.update status: :suspended
 
       LicenseMailer.cancel_license(to: customer.email, license: license, brand: @client.brand).deliver_now!
+
+      if token_watidy
+        watidy.send_message license.customer.phone,
+                            "Olá #{license.customer.name}, sua licença #{license.client.brand} foi cancelada!"
+      end
 
       return render json: { sucess: true,
                             message: "Licença #{license.key} cancelada para o cliente #{customer.email}" }
