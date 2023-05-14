@@ -8,10 +8,16 @@ class LicensesController < ApplicationController
 
   # GET /licenses or /licenses.json
   def index
-    @clients_options = Client.pluck(:brand, :id);
-    @licenses = License.left_joins(:payment).where('`key` LIKE ?', "%#{params[:q]}%").order(
+    @clients_options = Client.pluck(:brand, :id)
+    search_str = params[:q].split('@').map { |s| s.split('~') }.map { |s| "#{s[0]} LIKE '%#{s[1]}%'" }.join(' AND ') if params[:q]
+    @licenses = License.left_joins(:client, :customer, payment: [:payment_integration]).where(search_str).order(
       params[:sort] ||= 'licenses.created_at DESC'
-    ).page(params[:page])
+    ).page(params[:page]).limit(60)
+
+
+    if params[:partial]
+      render partial: 'licenses/list', locals: { licenses: @licenses }
+    end
   end
 
   # GET /licenses/1 or /licenses/1.json

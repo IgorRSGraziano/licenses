@@ -1,0 +1,24 @@
+<% @licenses.each do |license| %>
+  <tr>
+    <% [license.id, license.key, license.client.brand, license.payment&.payment_integration&.name, license.created_at, license.updated_at, license.customer&.email].each do |data| %>
+      <td class="border-b border-slate-100 break-words p-4 px-4 m-auto text-center text-slate-500"><%= data %></td>
+    <% end %>
+    <% #TODO colocar input select nas opções
+       if license.status == "active"
+         bg = "bg-green-200"
+       elsif license.status == "inactive"
+         bg = "bg-red-200"
+       else
+         bg = "bg-blue-200"
+       end
+    %>
+    <td class="border-b border-slate-100 break-words p-4 px-1 m-auto text-center text-slate-500">
+          <span class="<%= bg %> block w-24 py-1 px-2 m-auto rounded hover:cursor-pointer" onclick="updateStatus(<%= license.id %>)">
+          <%= license.status %>
+          </span>
+    </td>
+    <td class="border-b border-slate-100 break-words p-4 px-1 m-auto text-center text-slate-500 w-0.5">
+      <%= link_to t('actions.view'), license_path(license), class: "button" %>
+    </td>
+  </tr>
+<% end %>

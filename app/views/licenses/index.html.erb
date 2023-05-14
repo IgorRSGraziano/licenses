@@ -22,21 +22,27 @@
     </div>
   </div>
 
-  <%= render 'layouts/search' %>
-
   <div id="licenses" class="overflow-auto w-full">
     <table class="border-collapse table-fixed text-sm max-w-full">
       <thead class="bg-slate-100 shadow-md">
       <tr>
-        <% { License.h(:id) => 'licenses.id', License.h(:key) => 'licenses.`key`', Client.h => 'licenses.client_id', "Integração" => 'payments.payment_integration_id', License.h(:created_at) => 'licenses.created_at', License.h(:updated_at) => 'licenses.updated_at', Customer.h => 'licenses.customer_id', License.h(:status) => 'licenses.status' }.each do |text, search_text| %>
-          <th class="border-b break-words font-medium text-center p-1 pt-6 py-3 text-left">
-            <a href="<%= sort_url request.original_url, search_text %>" class="text-slate-400">
-              <%= fa_icon(sort_arrow(request.original_url, search_text)) %>
+
+        <% { License.h(:id) => { search: 'licenses.id', input_css: 'width: 50px' },
+             License.h(:key) => { search: 'licenses.`key`', input_css: 'width: 270px' },
+             Client.h => { search: ' clients.brand ', input_css: 'width: 90px' },
+             "Integração" => { search: ' payment_integrations.name ', input_css: 'width: 70px' },
+             License.h(:created_at) => { search: ' licenses.created_at ', input_css: 'width: 125px' },
+             License.h(:updated_at) => { search: ' licenses.updated_at ', input_css: 'width: 125px' },
+             Customer.h => { search: 'customers.email', input_css: 'width: 190px' },
+             License.h(:status) => { search: ' licenses.status ', input_css: 'width: 90px' } }.each do |text, opts| %>
+          <th class="border-b break-words font-medium text-center p-1 pt-6 py-3 text-left w-[50px]">
+            <a href="<%= sort_url request.original_url, opts[:search] %>" class="text-slate-400">
+              <%= fa_icon(sort_arrow(request.original_url, opts[:search])) %>
               <%= text %>
             </a>
-            <label class="flex items-center px-2">
+            <label class="flex items-center px-2 bg-white mt-3 m-auto" style="<%= opts[:input_css] %>">
               <%= fa_icon 'search', class: "text-slate-400" %>
-              <input type="text" class="m-auto border-t-0 border-x-0"/>
+              <input type="text" class="m-auto border-t-0 border-x-0 w-full" data-search="<%= opts[:search] %>"/>
             </label>
           </th>
         <% end %>
@@ -45,32 +51,9 @@
         </th>
       </tr>
       </thead>
-      <tbody class="bg-white">
-      <% @licenses.each do |license| %>
-        <tr>
-          <% [license.id, license.key, license.client.brand, license.payment&.payment_integration&.name, license.created_at, license.updated_at, license.customer&.email].each do |data| %>
-            <td class="border-b border-slate-100 break-words p-4 px-4 m-auto text-center text-slate-500"><%= data %></td>
-          <% end %>
-          <% #TODO colocar input select nas opções
-             if license.status == "active"
-               bg = "bg-green-200"
-             elsif license.status == "inactive"
-               bg = "bg-red-200"
-             else
-               bg = "bg-blue-200"
-             end
-          %>
-          <td class="border-b border-slate-100 break-words p-4 px-1 m-auto text-center text-slate-500">
-          <span class="<%= bg %> block w-24 py-1 px-2 m-auto rounded hover:cursor-pointer" onclick="updateStatus(<%= license.id %>)">
-          <%= license.status %>
-          </span>
-          </td>
-          <td class="border-b border-slate-100 break-words p-4 px-1 m-auto text-center text-slate-500 w-0.5">
-            <%= link_to t('actions.view'), license_path(license), class: "button" %>
-          </td>
-        </tr>
-      <% end %>
-      </table>
+      <tbody class="bg-white" data-license-list>
+      <%= render 'list', licenses: @licenses %>
+    </table>
   </div>
 
   <div class="flex justify-between p-5">
@@ -122,4 +105,15 @@
 
     window.showModal = showModal;
     window.generateLicense = generateLicense;
+
+    const searchElements = document.querySelectorAll('[data-search]');
+    const handleSearch = async () => {
+        const searchStr = [...searchElements].filter(el => el.value?.trim()).map(el => `${el.dataset.search}~${el.value}`).join('%40')
+        const req = await fetch(`?q=${searchStr}&partial=1`)
+        const res = await req.text()
+        document.querySelector('[data-license-list]').innerHTML = res
+    }
+    searchElements.forEach(el => {
+        el.addEventListener('input', handleSearch)
+    })
 </script>
