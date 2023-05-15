@@ -8,7 +8,7 @@ class Asaas
   end
 
   def change_customer_description(customer_id, description)
-    HTTP.post "#{@host}/customers/#{customer_id}", { json: { description => description } }
+    req.post "#{@host}/customers/#{customer_id}", { json: { description => description } }
   end
 
   def initialize(token)
