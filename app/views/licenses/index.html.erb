@@ -108,7 +108,7 @@
 
     const searchElements = document.querySelectorAll('[data-search]');
     const handleSearch = async () => {
-        const searchStr = [...searchElements].filter(el => el.value?.trim()).map(el => `${el.dataset.search}~${el.value}`).join('%40')
+        const searchStr = [...searchElements].filter(el => el.value?.trim()).map(el => `${el.dataset.search}~${el.value}`).join('~~')
         const req = await fetch(`?q=${searchStr}&partial=1`)
         const res = await req.text()
         document.querySelector('[data-license-list]').innerHTML = res

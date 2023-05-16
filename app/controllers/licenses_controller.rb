@@ -9,7 +9,7 @@ class LicensesController < ApplicationController
   # GET /licenses or /licenses.json
   def index
     @clients_options = Client.pluck(:brand, :id)
-    search_str = params[:q].split('@').map { |s| s.split('~') }.map { |s| "#{s[0]} LIKE '%#{s[1]}%'" }.join(' AND ') if params[:q]
+    search_str = params[:q].split('~~').map { |s| s.split('~') }.map { |s| "#{s[0]} LIKE '%#{s[1]}%'" }.join(' AND ') if params[:q]
     @licenses = License.left_joins(:client, :customer, payment: [:payment_integration]).where(search_str).order(
       params[:sort] ||= 'licenses.created_at DESC'
     ).page(params[:page]).limit(60)
