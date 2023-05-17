@@ -39,13 +39,26 @@ class WebhookController < ApplicationController
     token_watidy = @client.param('WATIDY_TOKEN').value(@client.id)
     watidy = Watidy.new token_watidy
 
-    # TODO: Passar responsabilidade para o model
     if buy_events.include?(req.event)
       installment = req.data.purchase.payment.installments_number
       # if installment > 1
       #   return render json: { sucess: false, message: "Token já gerado na primeira parcela. Parcela: #{installment}" },
       #                 status: :ok
       # end
+
+      existing_payment = Payment.first external_id: req.data.subscription.subscriber.code
+      if existing_payment
+        if existing_payment.license.status == :active
+          return render json: { succes: false,
+                                message: "Pagamento já processado para as chave #{existing_payment.license.key}" }
+        else
+          existing_payment.license.status = :active
+          existing_payment.license.save
+          return render json: { succes: true,
+                                message: "Chave reativada #{existing_payment.license.key}" }
+        end
+      end
+
       email = req.data.buyer.email
       name = req.data.buyer.name
       phone = req.data.buyer.checkout_phone
@@ -125,12 +138,25 @@ class WebhookController < ApplicationController
     token_watidy = @client.param('WATIDY_TOKEN').value(@client.id)
     watidy = Watidy.new token_watidy
 
+    existing_payment = Payment.first external_id: charge.payment.subscription
     if paymentStatus.include? charge.event
       unless charge.payment.paymentLink
         return render json: { succes: false, message: 'Compra não foi gerado por link de pagamento' }
       end
       if !charge.payment.installmentNumber.nil? && charge.payment.installmentNumber > 1
         return render json: { succes: false, message: 'Pagamento parcelado, token gerado na primeira parcela.' }
+      end
+
+      if existing_payment
+        if existing_payment.license.status == :active
+          return render json: { succes: false,
+                                message: "Pagamento já processado para as chave #{existing_payment.license.key}" }
+        else
+          existing_payment.license.status = :active
+          existing_payment.license.save
+          return render json: { succes: true,
+                                message: "Chave reativada #{existing_payment.license.key}" }
+        end
       end
 
       # links = Link.where client_id: @client.id
