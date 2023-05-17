@@ -46,9 +46,9 @@ class WebhookController < ApplicationController
       #                 status: :ok
       # end
 
-      existing_payment = Payment.first external_id: req.data.subscription.subscriber.code
+      existing_payment = Payment.find_by external_id: req.data.subscription.subscriber.code
       if existing_payment
-        if existing_payment.license.status == :active
+        if existing_payment.license.active?
           return render json: { succes: false,
                                 message: "Pagamento já processado para as chave #{existing_payment.license.key}" }
         else
@@ -138,7 +138,7 @@ class WebhookController < ApplicationController
     token_watidy = @client.param('WATIDY_TOKEN').value(@client.id)
     watidy = Watidy.new token_watidy
 
-    existing_payment = Payment.first external_id: charge.payment.subscription
+    existing_payment = Payment.find_by external_id: charge.payment.subscription
     if paymentStatus.include? charge.event
       unless charge.payment.paymentLink
         return render json: { succes: false, message: 'Compra não foi gerado por link de pagamento' }
