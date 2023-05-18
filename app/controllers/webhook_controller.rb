@@ -97,7 +97,7 @@ class WebhookController < ApplicationController
       license.save
       LicenseMailer.cancel_license(to: req.data.buyer.email, license: license, brand: @client.brand).deliver_now!
 
-      if token_watidy
+      unless token_watidy.empty?
         watidy.send_message license.customer.phone,
                             "Olá #{license.customer.name}, sua licença #{license.client.brand} foi cancelada!"
       end
@@ -192,7 +192,7 @@ class WebhookController < ApplicationController
 
         LicenseMailer.send_license(to: customer.email, license: license, client: @client).deliver_now!
 
-        if token_watidy
+        unless token_watidy.empty?
           watidy.send_message customer.phone,
                               "Olá #{customer.name}, sua licença foi gerada com sucesso! Chave de ativação: #{license.key}"
         end
