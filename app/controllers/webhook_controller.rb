@@ -128,6 +128,8 @@ class WebhookController < ApplicationController
     nonPaymentStatus = %w[PAYMENT_REFUNDED PAYMENT_OVERDUE PAYMENT_DUNNING_REQUESTED]
     paymentStatus = %w[PAYMENT_CONFIRMED PAYMENT_RECEIVED]
 
+    transaction = charge.payment.subscription || charge.payment.id
+
     if charge.event == 'PAYMENT_RECEIVED' && charge.payment.billingType == 'CREDIT_CARD'
       return render json: { succes: false,
                             message: 'Licença não gerada, pagamento recebido, licença foi gerada na confirmação' }
@@ -138,7 +140,7 @@ class WebhookController < ApplicationController
     token_watidy = @client.param('WATIDY_TOKEN').value(@client.id)
     watidy = Watidy.new token_watidy
 
-    existing_payment = Payment.find_by external_id: charge.payment.subscription if charge.payment.subscription.present?
+    existing_payment = Payment.find_by external_id: transaction if transaction.present?
     if paymentStatus.include? charge.event
       unless charge.payment.paymentLink
         return render json: { succes: false, message: 'Compra não foi gerado por link de pagamento' }
@@ -179,7 +181,7 @@ class WebhookController < ApplicationController
                               # installment: charge.payment.installmentNumber,
                               # value: req.data.purchase.price.value,
                               # plan: req.data.subscription.plan.name,
-                              external_id: charge.payment.subscription,
+                              external_id: transaction,
                               payment_integration_id: paymentIntegration.id
 
         payment.save
@@ -201,7 +203,7 @@ class WebhookController < ApplicationController
       return render json: { sucess: true, message: "Gerado chave #{license.key} para o cliente #{customer&.email}" },
                     status: :ok
     elsif nonPaymentStatus.include? charge.event
-      license = Payment.find_by(external_id: charge.payment.subscription)&.license
+      license = Payment.find_by(external_id: transaction)&.license
 
       if license.nil?
         Wpp.send_message ENV['NOTIFY_NUMBER'], "Licença não encontrada para o cliente #{charge.payment.customer}"
