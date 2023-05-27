@@ -83,7 +83,7 @@ class WebhookController < ApplicationController
                               customer_id: customer.id, client_id: @client.id
         license.save!
         LicenseMailer.send_license(to: email, license: license, client: @client).deliver_now!
-        if token_watidy
+        if !token_watidy.nil? && !token_watidy.empty?
           watidy.send_message customer.phone,
                               "Olá #{customer.name}, sua licença foi gerada com sucesso! Chave de ativação: #{license.key}"
         end
@@ -97,7 +97,7 @@ class WebhookController < ApplicationController
       license.save
       LicenseMailer.cancel_license(to: req.data.buyer.email, license: license, brand: @client.brand).deliver_now!
 
-      unless token_watidy.empty?
+      if !token_watidy.nil? && !token_watidy.empty?
         watidy.send_message license.customer.phone,
                             "Olá #{license.customer.name}, sua licença #{license.client.brand} foi cancelada!"
       end
@@ -125,8 +125,8 @@ class WebhookController < ApplicationController
       return render json: { sucess: false, message: 'Token inválido' },
                     status: :forbidden
     end
-    nonPaymentStatus = %w[PAYMENT_REFUNDED PAYMENT_OVERDUE PAYMENT_DUNNING_REQUESTED]
-    paymentStatus = %w[PAYMENT_CONFIRMED PAYMENT_RECEIVED]
+    non_payment_status = %w[PAYMENT_REFUNDED PAYMENT_OVERDUE PAYMENT_DUNNING_REQUESTED]
+    payment_status = %w[PAYMENT_CONFIRMED PAYMENT_RECEIVED]
 
     transaction = charge.payment.subscription || charge.payment.id
 
@@ -141,7 +141,7 @@ class WebhookController < ApplicationController
     watidy = Watidy.new token_watidy
 
     existing_payment = Payment.find_by external_id: transaction if transaction.present?
-    if paymentStatus.include? charge.event
+    if payment_status.include? charge.event
       unless charge.payment.paymentLink
         return render json: { succes: false, message: 'Compra não foi gerado por link de pagamento' }
       end
@@ -175,14 +175,14 @@ class WebhookController < ApplicationController
                                 external_id: asaas_customer.id, client_id: @client.id
         customer.save
 
-        paymentIntegration = PaymentIntegration.find_by identifier: 'ASAAS'
+        payment_integration = PaymentIntegration.find_by identifier: 'ASAAS'
 
         payment = Payment.new billing_type: charge.payment.billingType,
                               # installment: charge.payment.installmentNumber,
                               # value: req.data.purchase.price.value,
                               # plan: req.data.subscription.plan.name,
                               external_id: transaction,
-                              payment_integration_id: paymentIntegration.id
+                              payment_integration_id: payment_integration.id
 
         payment.save
 
@@ -194,7 +194,7 @@ class WebhookController < ApplicationController
 
         LicenseMailer.send_license(to: customer.email, license: license, client: @client).deliver_now!
 
-        unless token_watidy.empty?
+        if !token_watidy.nil? && !token_watidy.empty?
           watidy.send_message customer.phone,
                               "Olá #{customer.name}, sua licença foi gerada com sucesso! Chave de ativação: #{license.key}"
         end
@@ -202,7 +202,7 @@ class WebhookController < ApplicationController
 
       return render json: { sucess: true, message: "Gerado chave #{license.key} para o cliente #{customer&.email}" },
                     status: :ok
-    elsif nonPaymentStatus.include? charge.event
+    elsif non_payment_status.include? charge.event
       license = Payment.find_by(external_id: transaction)&.license
 
       if license.nil?
@@ -216,7 +216,7 @@ class WebhookController < ApplicationController
 
       LicenseMailer.cancel_license(to: customer.email, license: license, brand: @client.brand).deliver_now!
 
-      if token_watidy
+      if !token_watidy.nil? && token_watidy.empty?
         watidy.send_message license.customer.phone,
                             "Olá #{license.customer.name}, sua licença #{license.client.brand} foi cancelada!"
       end
